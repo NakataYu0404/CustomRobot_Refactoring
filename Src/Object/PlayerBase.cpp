@@ -3,7 +3,7 @@
 #include "../Utility/AsoUtility.h"
 #include "../Manager/SceneManager.h"
 
-// ブキ
+//  ブキ
 #include "Weapon/WeaponBase.h"
 #include "Weapon/ShotMachine.h"
 #include "Weapon/ShotElecShock.h"
@@ -16,6 +16,8 @@
 #include "../Manager/Camera.h"
 #include "PlayerBase.h"
 
+//   //タブ
+//  //スペース
 PlayerBase::PlayerBase(void)
 {
 }
@@ -35,7 +37,7 @@ void PlayerBase::Init(TYPE type, KEY_CONFIG keyConfig)
     podFlameCnt_ = 0;
 
 
-    // 爆発エフェクト読み込み  
+    //  爆発エフェクト読み込み  
     LoadDivGraph((Application::PATH_IMAGE + "Blast.png").c_str(), BLAST_ANIM_NUM, 4, 4, BLAST_SIZE_X, BLAST_SIZE_Y, blastImgs_, true);
     for (int i = 0; i < 4; i++)
     {
@@ -66,9 +68,9 @@ void PlayerBase::ChangeBody(int modelId)
     MV1SetRotationXYZ(modelId_, rot_);
     MV1SetPosition(modelId_, pos_);
 
-    // アニメーションをアタッチする
+    //  アニメーションをアタッチする
     animAttachNo_ = MV1AttachAnim(modelId_, playerAnim_.IdleAnim);
-    // アタッチしているアニメーションの総再生時間を取得する
+    //  アタッチしているアニメーションの総再生時間を取得する
     animTotalTime_ = MV1GetAttachAnimTotalTime(modelId_, animAttachNo_);
 
 
@@ -77,28 +79,28 @@ void PlayerBase::ChangeBody(int modelId)
 void PlayerBase::ChangeShot(SHOT_TYPE shotType)
 {
     shotType_ = shotType;
-    // 弾の種類に応じた弾数の設定(一回の射撃動作で何発出るか)
+    //  弾の種類に応じた弾数の設定(一回の射撃動作で何発出るか)
     PlayerBase::BULLETS bullets;
     PlayerBase::WeaponDelay weaponDelay;
     switch (shotType)
     {
     case PlayerBase::SHOT_TYPE::MACHINE:
-        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/Shot.mv1").c_str());
+        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
         shotBullet_ = bullets.S_MACHINE;
         delayShot_ = weaponDelay.S_MACHINE;
         break;
     case PlayerBase::SHOT_TYPE::ELECSHOCK:
-        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/Fist.mv1").c_str());
+        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Fist.mv1").c_str());
         shotBullet_ = bullets.S_ELECSHOCK;
         delayShot_ = weaponDelay.S_ELECSHOCK;
         break;
     case PlayerBase::SHOT_TYPE::SNIPER:
-        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/Shot.mv1").c_str());
+        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
         shotBullet_ = bullets.S_SNIPER;
         delayShot_ = weaponDelay.S_SNIPER;
         break;
     case PlayerBase::SHOT_TYPE::MAX:
-        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/Shot.mv1").c_str());
+        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
         shotBullet_ = bullets.S_MACHINE;
         delayShot_ = weaponDelay.S_MACHINE;
         break;
@@ -110,25 +112,25 @@ void PlayerBase::ChangeShot(SHOT_TYPE shotType)
 void PlayerBase::ChangeBomb(BOMB_TYPE bombType)
 {
     bombType_ = bombType;
-    // 弾の種類に応じた弾数の設定(一回の射撃動作で何発出るか)
+    //  弾の種類に応じた弾数の設定(一回の射撃動作で何発出るか)
     PlayerBase::BULLETS bullets;
     PlayerBase::WeaponDelay weaponDelay;
     switch (bombType)
     {
     case PlayerBase::BOMB_TYPE::CANNON:
-        modelBombId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/Shot.mv1").c_str());
+        modelBombId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
         bombBullet_ = bullets.B_CANNON;
         delayBomb_ = weaponDelay.B_CANNON;
 
         break;
     case PlayerBase::BOMB_TYPE::MINE:
-        modelBombId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/Shot.mv1").c_str());
+        modelBombId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
         bombBullet_ = bullets.B_MINE;
         delayBomb_ = weaponDelay.B_MINE;
 
         break;
     case PlayerBase::BOMB_TYPE::MAX:
-        modelBombId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/Shot.mv1").c_str());
+        modelBombId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
         bombBullet_ = bullets.B_CANNON;
         delayBomb_ = weaponDelay.B_CANNON;
         break;
@@ -141,28 +143,28 @@ void PlayerBase::ChangeBomb(BOMB_TYPE bombType)
 void PlayerBase::ChangePod(POD_TYPE podType)
 {
     podType_ = podType;
-    // 弾の種類に応じた弾数の設定(一回の射撃動作で何発出るか)
+    //  弾の種類に応じた弾数の設定(一回の射撃動作で何発出るか)
     PlayerBase::BULLETS bullets;
     PlayerBase::WeaponDelay weaponDelay;
     switch (podType)
     {
     case PlayerBase::POD_TYPE::BOUNCE:
-        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/SpikeShot.mv1").c_str());
+        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/SpikeShot.mv1").c_str());
         podBullet_ = bullets.P_BOUNCE;
         delayPod_ = weaponDelay.P_BOUNCE;
         break;
     case PlayerBase::POD_TYPE::FREEZE:
-        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/Bird.mv1").c_str());
+        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Bird.mv1").c_str());
         podBullet_ = bullets.P_FREEZE;
         delayPod_ = weaponDelay.P_FREEZE;
         break;
     case PlayerBase::POD_TYPE::STICKY:
-        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/SpikeShot.mv1").c_str());
+        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/SpikeShot.mv1").c_str());
         podBullet_ = bullets.P_STICKY;
         delayPod_ = weaponDelay.P_STICKY;
         break;
     case PlayerBase::POD_TYPE::MAX:
-        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Cannon/Shot.mv1").c_str());
+        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
         podBullet_ = bullets.P_BOUNCE;
         delayPod_ = weaponDelay.P_BOUNCE;
         break;
@@ -179,18 +181,18 @@ void PlayerBase::ChangeReg(REG_TYPE regType)
 
 void PlayerBase::SetCommon(void)
 {
-    // 使用メモリ容量と読み込み時間削減のため
-    // モデルデータをいくつもメモリ上に表示させない
+    //  使用メモリ容量と読み込み時間削減のため
+    //  モデルデータをいくつもメモリ上に表示させない
 
     LoadDivGraph((Application::PATH_IMAGE + "smoke.png").c_str(), 12, 12, 1, 2112 / 12, 61, smokeImage_, 0, 0);
     isSpriteEnd_ = false;
 
 
 
-    // 角度の設定
+    //  角度の設定
     rot_ = { 0.0f,0.0f * DX_PI_F / 180.0f,0.0f };
 
-    // 位置の設定
+    //  位置の設定
     switch (playerNumber_)
     {
     case PlayerBase::TYPE::NONE:
@@ -207,7 +209,7 @@ void PlayerBase::SetCommon(void)
         break;
     }
 
-    // 右方向に移動する
+    //  右方向に移動する
     dir_ = { 0.0f,0.0f,0.0f };
 
     airDashDir_ = { 0.0f,0.0f,0.0f };
@@ -215,17 +217,17 @@ void PlayerBase::SetCommon(void)
     weaponDir_ = { 0.0f,0.0f,0.0f };
     bombDirX_ = 0.0f;
 
-    // 初期は生存状態
+    //  初期は生存状態
     isAlive_ = true;
 
 
-    // 再生中のアニメーション時間
+    //  再生中のアニメーション時間
     stepAnim_ = 0.0f;
 
-    // アニメーション速度
+    //  アニメーション速度
     speedAnim_ = 30.0f;
 
-    // 衝突判定用の球体中心の調整座標
+    //  衝突判定用の球体中心の調整座標
     collisionLocalPos_ = { 0.0f, 50.0f, 0.0f };
 
     hp_ = hpMax_;
@@ -233,11 +235,11 @@ void PlayerBase::SetCommon(void)
     attackFlag = false;
     alreadyAttackHit_ = false;
 
-    // ジャンプ力
+    //  ジャンプ力
     jumpPow_ = 0.0;
-    // ジャンプ判定
+    //  ジャンプ判定
     isJump_ = false;
-    // ジャンプキー押下判定
+    //  ジャンプキー押下判定
     isPutJumpKey_ = false;
 
     jumpPos_ = pos_;
@@ -288,10 +290,10 @@ void PlayerBase::SetCommon(void)
 
 void PlayerBase::SetParam(void)
 {
-    // 大きさの設定
+    //  大きさの設定
     scl_ = { 0.3f,0.3f,0.3f };
 
-    // 移動スピードz
+    //  移動スピードz
     speed_ = 1.0f;
 
     stunHpMax_ = 100;
@@ -304,12 +306,12 @@ void PlayerBase::SetParam(void)
 
     airDashSpeed_ = 3.0f;
 
-    // エアダッシュできる回数
+    //  エアダッシュできる回数
     MAX_AIRDASH_CNT = 3;
-    // ホバーできる時間
+    //  ホバーできる時間
     MAX_HOVER_CNT = 120;
 
-    // ジャンプキー入力を受け付けるフレーム数
+    //  ジャンプキー入力を受け付けるフレーム数
     INPUT_JUMP_FRAME = 12;
 
     //	最大ジャンプ力
@@ -321,11 +323,11 @@ void PlayerBase::SetParam(void)
     playerAnim_.JumpAnim = 5;
     playerAnim_.StunAnim = 7;
 
-    // アニメーションをアタッチする
+    //  アニメーションをアタッチする
     MV1DetachAnim(modelId_, animAttachNo_);
     animAttachNo_ = MV1AttachAnim(modelId_, playerAnim_.IdleAnim);
 
-    // アタッチしているアニメーションの総再生時間を取得する
+    //  アタッチしているアニメーションの総再生時間を取得する
     animTotalTime_ = MV1GetAttachAnimTotalTime(modelId_, animAttachNo_);
 
 
@@ -334,16 +336,16 @@ void PlayerBase::SetParam(void)
 void PlayerBase::Update(void)
 {
 
-    // 生存していなければ処理しない
+    //  生存していなければ処理しない
     if (isAlive_ == false)
     {
         return;
     }
 
-    // 重力を常にかける
+    //   重力を常にかける
     AddGravity();
 
-    //同じif文を3つも使っていて気持ち悪いけど、Process◯◯と◯◯、jumpとAirDashの処理順を入れ替えるわけにはいかないので仕方がない
+    //   同じif文を3つも使っていて気持ち悪いけど、Process◯◯と◯◯、jumpとAirDashの処理順を入れ替えるわけにはいかないので仕方がない
 
     if (status_ != STATUS::STUN && status_ != STATUS::RECOVERY)
     {
@@ -356,18 +358,18 @@ void PlayerBase::Update(void)
     {
         Turn();
 
-        // ジャンプ操作
+        //  ジャンプ操作
         ProcessJump();
     }
 
-    // ジャンプ動作
+    //  ジャンプ動作
     Jump();
 
     if (status_ != STATUS::STUN && status_ != STATUS::RECOVERY)
     {
         switch (regType_)
         {
-            // cntJumpInput_が最大値だったら、ホバー、スラスターをさせたい
+            //  cntJumpInput_が最大値だったら、ホバー、スラスターをさせたい
         case PlayerBase::REG_TYPE::AIRDASH:
             AirDash();
             break;
@@ -378,7 +380,7 @@ void PlayerBase::Update(void)
 
         Attack();
 
-        // 発射
+        //  発射
         Fire(shotType_, bombType_, podType_);
     }
     else
@@ -396,7 +398,7 @@ void PlayerBase::Update(void)
     }
     recoveryCnt_++;
 
-    // 弾処理
+    //  弾処理
     ShotUpdate();
 
     int hp = hp_;
@@ -415,7 +417,7 @@ void PlayerBase::Update(void)
 
 void PlayerBase::Draw(void)
 {
-    // 状況にあわせた色
+    //  状況にあわせた色
     if (invincible_)
     {
         MV1SetDifColorScale(modelId_, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
@@ -450,7 +452,7 @@ void PlayerBase::Draw(void)
     }
     if (recoveryCnt_ <= 180)
     {
-        // リカバリーから無敵中の点滅
+        //  リカバリーから無敵中の点滅
         if (recoveryCnt_ % 20 <= 9)
         {
             MV1DrawModel(modelId_);
@@ -474,7 +476,7 @@ void PlayerBase::Draw(void)
 
     //DrawFormatString(0, 200 + 100 * static_cast<int>(playerNumber_), 0x000000, "hp_:%d", hp_);
 
-    // 当たり判定の諸々描画
+    //  当たり判定の諸々描画
     VECTOR capsuleSPos = VAdd(pos_, { 0.0f,70.0f,0.0f });
     VECTOR capsuleEPos = VAdd(pos_, { 0.0f,25.0f,0.0f });
     int capsuleRadius = 25;
@@ -487,7 +489,7 @@ void PlayerBase::Draw(void)
     size_t size = shots_.size();
     for (int i = 0; i < size; i++)
     {
-        // i番目の弾が生きていたら
+        //  i番目の弾が生きていたら
         if (shots_[i]->IsAlive())
         {
             shots_[i]->Draw();
@@ -497,7 +499,7 @@ void PlayerBase::Draw(void)
     size = bombs_.size();
     for (int i = 0; i < size; i++)
     {
-        // i番目の弾が生きていたら
+        //  i番目の弾が生きていたら
         if (bombs_[i]->IsAlive())
         {
             bombs_[i]->Draw();
@@ -507,7 +509,7 @@ void PlayerBase::Draw(void)
     size = pods_.size();
     for (int i = 0; i < size; i++)
     {
-        // i番目の弾が生きていたら
+        //  i番目の弾が生きていたら
         if (pods_[i]->IsAlive())
         {
             pods_[i]->Draw();
@@ -527,8 +529,6 @@ void PlayerBase::Draw(void)
     {
         smokesprite = 0;
     }
-
-    DrawUI();
 
 }
 
@@ -552,7 +552,7 @@ void PlayerBase::Release(void)
         pod->Release();
     }
 
-    // 爆発画像の解放
+    //  爆発画像の解放
     for (int i = 0; i < BLAST_ANIM_NUM; i++)
     {
         DeleteGraph(blastImgs_[i]);
@@ -567,28 +567,27 @@ void PlayerBase::Release(void)
 
 void PlayerBase::Animation(void)
 {
-    // アニメーション再生
+    //  アニメーション再生
 
-// 経過時間の取得
+    //  経過時間の取得
     float deltaTime = 1.0f / SceneManager::DEFAULT_FPS;
 
-    // アニメーション時間の進行
+    //  アニメーション時間の進行
     stepAnim_ += (speedAnim_ * deltaTime);
     if (stepAnim_ > animTotalTime_)
     {
-        // ループ再生
+        //  ループ再生
         stepAnim_ = 0.0f;
     }
 
-
-    // 再生するアニメーション時間の設定
+    //  再生するアニメーション時間の設定
     MV1SetAttachAnimTime(modelId_, animAttachNo_, stepAnim_);
 
 }
 
 void PlayerBase::ChangeAnim(void)
 {
-    // アニメーションをアタッチする
+    //  アニメーションをアタッチする
     MV1DetachAnim(modelId_, animAttachNo_);
 
     switch (status_)
@@ -617,10 +616,7 @@ void PlayerBase::ChangeAnim(void)
     default:
         break;
     }
-
-
-
-    // アタッチしているアニメーションの総再生時間を取得する
+    //  アタッチしているアニメーションの総再生時間を取得する
     animTotalTime_ = MV1GetAttachAnimTotalTime(modelId_, animAttachNo_);
 
 
@@ -662,7 +658,7 @@ void PlayerBase::Damage(int hpDamage, int stunDamage, VECTOR weaponDir, ATTACK_T
 {
     if (status_ == STATUS::STUN)
     {
-        // スタン中のダメージ加算(スタン中のダメージがある程度溜まったら起き上がる)
+        //  スタン中のダメージ加算(スタン中のダメージがある程度溜まったら起き上がる)
         stunDmg_ += hpDamage / defensePower_;
 
     }
@@ -677,12 +673,12 @@ void PlayerBase::Damage(int hpDamage, int stunDamage, VECTOR weaponDir, ATTACK_T
     {
         stunHp_ = 0;
     }
-    // 強制ふっとびなので、jumpPowをむりやり与える
-    // weapondirが下方向であっても上方方向に動くようにする(weapondirのyは使わず、jumppowだけで調整するのがいいか)
-    // 強制横移動はdir,speedを設定する
-    // ダメージをある程度もらったら、しばらく無敵になって起き上がる
-    // 攻撃の種類によってふっとびを変える
-    // 地面についていると自分から以外浮かない仕様になっていたので、すこし高さを上げる
+    //  強制ふっとびなので、jumpPowをむりやり与える
+    //  weapondirが下方向であっても上方方向に動くようにする(weapondirのyは使わず、jumppowだけで調整するのがいいか)
+    //  強制横移動はdir,speedを設定する
+    //  ダメージをある程度もらったら、しばらく無敵になって起き上がる
+    //  攻撃の種類によってふっとびを変える
+    //  地面についていると自分から以外浮かない仕様になっていたので、すこし高さを上げる
     weaponDir.y = 0.0f;
 
     switch (type)
@@ -721,7 +717,7 @@ void PlayerBase::Damage(int hpDamage, int stunDamage, VECTOR weaponDir, ATTACK_T
             speed_ = 0.0f;
             jumpPow_ = 10.0f;
             pos_.y += 0.2f;
-            // ボムに当たると、強制スタン
+            //  ボムに当たると、強制スタン
             stunHp_ = 0;
         }
         break;
@@ -785,10 +781,6 @@ void PlayerBase::SetEnemyPos(VECTOR pos)
     enemyPos_ = pos;
 }
 
-void PlayerBase::DrawUI(void)
-{
-}
-
 void PlayerBase::Fire(SHOT_TYPE shotType, BOMB_TYPE bombType, POD_TYPE podType)
 {
     Shot(shotType);
@@ -802,7 +794,7 @@ void PlayerBase::ProcessMove(void)
 {
     auto& ins = InputManager::GetInstance();
 
-    // プレイヤーの入力を検知する
+    //  プレイヤーの入力を検知する
     auto playerCtl = ins.GetJPadInputState(static_cast<InputManager::JOYPAD_NO>(playerNumber_));
 
     if (!isAirDash_)
@@ -811,19 +803,19 @@ void PlayerBase::ProcessMove(void)
         dir_.z = playerCtl.AKeyLY * -1;
     }
 
-    // dirは方向ベクトルのことだが、コントローラーの入力を10段階(N状態を除く)にしたので0～10になっている。最大値は1.0fの方が仕様上良いので除算する。
+    //  dirは方向ベクトルのことだが、コントローラーの入力を10段階(N状態を除く)にしたので0～10になっている。最大値は1.0fの方が仕様上良いので除算する。
     dir_.x /= 10.0f;
     dir_.z /= 10.0f;
 
 
-    // 動いてたら加速する
+    //  動いてたら加速する
     if (dir_.x != 0 || dir_.z != 0)
     {
         if (!isJump_)
         {
             ChangeStatus(STATUS::WALK);
         }
-        // 加速
+        //  加速
         Accele(MOVE_ACC);
     }
     else
@@ -838,7 +830,7 @@ void PlayerBase::Accele(float speed)
 {
     speed_ += speed;
 
-    // 速度制限
+    //  速度制限
     if (speed_ >= MAX_MOVE_SPEED)
     {
         if (!isJump_)
@@ -852,27 +844,27 @@ void PlayerBase::Accele(float speed)
 
 void PlayerBase::Decelerate(void)
 {
-    // スティック入力をしてない、特定のショット以外でのショット、エアダッシュをした
+    //  スティック入力をしてない、特定のショット以外でのショット、エアダッシュをした
     if ((dir_.x == 0 && dir_.z == 0)|| (isShot_ && shotType_ != SHOT_TYPE::ELECSHOCK) || alreadyAirDash_ || status_ == STATUS::STUN)
     {
-        // スピードを最低値に落とす
+        //  スピードを最低値に落とす
         speed_ = MIN_MOVE_SPEED;
     }
 }
 
 void PlayerBase::Shot(SHOT_TYPE shotType)
 {
-    // ここで弾の作成
+    //  ここで弾の作成
     auto& ins = InputManager::GetInstance();
 
-    // 弾処理
+    //  弾処理
     if ((ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.SHOT) && delayShotCnt_ > delayShot_) || shotFireCnt_ < shotBullet_)
     {
 
         isShot_ = true;
         shotFlameCnt_++;
 
-        // ボタンを押したから発射されたなら、カウントを0に
+        //  ボタンを押したから発射されたなら、カウントを0に
         if (ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.SHOT))
         {
             shotFlameCnt_ = 0;
@@ -881,25 +873,25 @@ void PlayerBase::Shot(SHOT_TYPE shotType)
                 shotFireCnt_ = 0;
             }
         }
-        // 6フレームに1回発射
+        //  6フレームに1回発射
         if (shotFireCnt_ < shotBullet_ && shotFlameCnt_ % 6 != 0)
         {
             return;
         }
 
-        // 発射処理の前に発射カウンタを上げておく
+        //  発射処理の前に発射カウンタを上げておく
         shotFireCnt_++;
 
-        // 空き配列が存在する場合はそこに弾情報を入れて、発射
+        //  空き配列が存在する場合はそこに弾情報を入れて、発射
         bool flag = false;
         size_t size = shots_.size();
         for (int i = 0; i < size; i++)
         {
-            // i番目の弾が生きていなかったら
+            //  i番目の弾が生きていなかったら
             if (!shots_[i]->IsAlive())
             {
-                // i番目の配列に弾を作る
-                shots_[i]->Init(modelShotId_, blastImgs_, BLAST_ANIM_NUM);
+                //  i番目の配列に弾を作る
+                shots_[i]->Init();
                 shots_[i]->CreateWeapon(weaponPos_, weaponDir_,(int)playerNumber_);
                 shots_[i]->SetRot(rot_);
                 flag = true;
@@ -911,7 +903,7 @@ void PlayerBase::Shot(SHOT_TYPE shotType)
                 break;
             }
         }
-        // 既に撃ったので、下の発射処理を抜ける
+        //  既に撃ったので、下の発射処理を抜ける
         if (flag)
         {
             if (shotFireCnt_ >= shotBullet_)
@@ -924,34 +916,29 @@ void PlayerBase::Shot(SHOT_TYPE shotType)
             }
             return;
         }
-
-        // 空き配列が無かった場合の発射処理
+        //  空き配列が無かった場合の発射処理
         std::shared_ptr<WeaponBase> shot = nullptr;
         switch (shotType)
         {
         case PlayerBase::SHOT_TYPE::MACHINE:
             shot = std::make_shared<ShotMachine>();
-            shot->Init(modelShotId_, blastImgs_, BLAST_ANIM_NUM);
-            shot->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
             break;
         case PlayerBase::SHOT_TYPE::ELECSHOCK:
             shot = std::make_shared<ShotElecShock>();
-            shot->Init(modelShotId_, blastImgs_, BLAST_ANIM_NUM);
-            shot->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
             break;
         case PlayerBase::SHOT_TYPE::SNIPER:
             shot = std::make_shared<ShotSniper>();
-            shot->Init(modelShotId_, blastImgs_, BLAST_ANIM_NUM);
-            shot->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
             break;
         case PlayerBase::SHOT_TYPE::MAX:
             break;
         default:
             shot = std::make_shared<ShotMachine>();
-            shot->Init(modelShotId_, blastImgs_, BLAST_ANIM_NUM);
-            shot->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
             break;
         }
+        shot->SetInitial(modelShotId_, blastImgs_, BLAST_ANIM_NUM);
+        shot->Init();
+        shot->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
+
         shot->SetRot(rot_);
         shots_.push_back(shot);
         SoundPlayer(SE_TYPE::SHOT);
@@ -975,14 +962,14 @@ void PlayerBase::Shot(SHOT_TYPE shotType)
 
 void PlayerBase::Bomb(BOMB_TYPE bombType)
 {
-    // ここで弾の作成
+    //  ここで弾の作成
     auto& ins = InputManager::GetInstance();
 
 
-    // 弾処理
+    //  弾処理
     if ((ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.BOMB) && delayBombCnt_ > delayBomb_) || bombFireCnt_ < bombBullet_)
     {
-        // ボタンを押したから発射されたなら、カウントを0に
+        //  ボタンを押したから発射されたなら、カウントを0に
         if (ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.BOMB))
         {
 
@@ -990,17 +977,17 @@ void PlayerBase::Bomb(BOMB_TYPE bombType)
 
         }
 
-        // 空き配列が存在する場合はそこに弾情報を入れて、発射
+        //  空き配列が存在する場合はそこに弾情報を入れて、発射
         bool flag = false;
         size_t size = bombs_.size();
         for (int i = 0; i < size; i++)
         {
-            // i番目の弾が生きていなかったら
+            //  i番目の弾が生きていなかったら
             if (!bombs_[i]->IsAlive())
             {
 
-                // i番目の配列に弾を作る
-                bombs_[i]->Init(modelBombId_, blastImgs_, BLAST_ANIM_NUM);
+                //  i番目の配列に弾を作る
+                bombs_[i]->Init();
                 bombs_[i]->SetEnemyPos(enemyPos_);
                 bombs_[i]->SetDistance(PythagorasDisXZ_);
                 if (!(pos_.y > enemyPos_.y + 0.5f) && !(bombType == PlayerBase::BOMB_TYPE::MINE))
@@ -1013,13 +1000,13 @@ void PlayerBase::Bomb(BOMB_TYPE bombType)
                 }
                 flag = true;
 
-                // 発射カウンタを上げる
+                //  発射カウンタを上げる
                 bombFireCnt_++;
                 SoundPlayer(SE_TYPE::BOMB);
                 break;
             }
         }
-        // 既に撃ったので、下の発射処理を抜ける
+        //  既に撃ったので、下の発射処理を抜ける
         if (flag)
         {
 
@@ -1027,15 +1014,33 @@ void PlayerBase::Bomb(BOMB_TYPE bombType)
             return;
         }
 
-        // 空き配列が無かった場合の発射処理
+        //  空き配列が無かった場合の発射処理
         std::shared_ptr<WeaponBase> bomb = nullptr;
         switch (bombType)
         {
         case PlayerBase::BOMB_TYPE::CANNON:
             bomb = std::make_shared<BombCannon>();
-            bomb->Init(modelBombId_, blastImgs_, BLAST_ANIM_NUM);
-            bomb->SetEnemyPos(enemyPos_);
-            bomb->SetDistance(PythagorasDisXZ_);
+            break;
+        case PlayerBase::BOMB_TYPE::MINE:
+            bomb = std::make_shared<BombMine>();
+            break;
+        case PlayerBase::BOMB_TYPE::MAX:
+            break;
+        default:
+            bomb = std::make_shared<BombCannon>();
+            break;
+        }
+        bomb->Init();
+        bomb->SetInitial(modelBombId_, blastImgs_, BLAST_ANIM_NUM);
+        bomb->SetEnemyPos(enemyPos_);
+        bomb->SetDistance(PythagorasDisXZ_);
+
+        if (bombType == BOMB_TYPE::MINE)
+        {
+            bomb->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
+        }
+        else
+        {
             if (!(pos_.y > enemyPos_.y + 0.5f))
             {
                 bomb->CreateWeapon(weaponPos_, bombDir_, (int)playerNumber_);
@@ -1044,35 +1049,13 @@ void PlayerBase::Bomb(BOMB_TYPE bombType)
             {
                 bomb->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
             }
-            break; 
-        case PlayerBase::BOMB_TYPE::MINE:
-            bomb = std::make_shared<BombMine>();
-            bomb->Init(modelBombId_, blastImgs_, BLAST_ANIM_NUM);
-            bomb->SetEnemyPos(enemyPos_);
-            bomb->SetDistance(PythagorasDisXZ_);
-            bomb->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
-            break;
-        case PlayerBase::BOMB_TYPE::MAX:
-            break;
-        default:
-            bomb = std::make_shared<BombCannon>();
-            bomb->Init(modelBombId_, blastImgs_, BLAST_ANIM_NUM);
-            bomb->SetEnemyPos(enemyPos_);
-            bomb->SetDistance(PythagorasDisXZ_);
-            if (!(pos_.y > enemyPos_.y+0.5f))
-            {
-                bomb->CreateWeapon(weaponPos_, bombDir_, (int)playerNumber_);
-            }
-            else
-            {
-                bomb->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
-            }  
-            break;
         }
+
         bombs_.push_back(bomb);
+
         SoundPlayer(SE_TYPE::BOMB);
 
-        // 発射カウンタを上げる
+        //  発射カウンタを上げる
         bombFireCnt_++;
 
     }
@@ -1089,14 +1072,14 @@ void PlayerBase::Bomb(BOMB_TYPE bombType)
 
 void PlayerBase::Pod(POD_TYPE podType)
 {
-    // ここで弾の作成
+    //  ここで弾の作成
     auto& ins = InputManager::GetInstance();
 
     if (((ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.POD) && delayPodCnt_ > delayPod_) || podFireCnt_ < podBullet_) && podType != POD_TYPE::STICKY)
     {
         podFlameCnt_++;
 
-        // ボタンを押したから発射されたなら、カウントを0に
+        //  ボタンを押したから発射されたなら、カウントを0に
         if (ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.POD))
         {
             podFlameCnt_ = 0;
@@ -1106,25 +1089,25 @@ void PlayerBase::Pod(POD_TYPE podType)
             }
         }
 
-        // 6フレームに1回発射
+        //  6フレームに1回発射
         if (podFireCnt_ < podBullet_ && podFlameCnt_ % 6 != 0)
         {
             return;
         }
 
-        // 発射カウンタを上げておく
+        //  発射カウンタを上げておく
         podFireCnt_++;
 
-        // 空き配列が存在する場合はそこに弾情報を入れて、発射
+        //  空き配列が存在する場合はそこに弾情報を入れて、発射
         bool flag = false;
         size_t size = pods_.size();
         for (int i = 0; i < size; i++)
         {
-            // i番目の弾が生きていなかったら
+            //  i番目の弾が生きていなかったら
             if (!pods_[i]->IsAlive())
             {
-                // i番目の配列に弾を作る
-                pods_[i]->Init(modelPodId_, blastImgs_, BLAST_ANIM_NUM);
+                //  i番目の配列に弾を作る
+                pods_[i]->Init();
                 pods_[i]->SetDistance(PythagorasDisXZ_);
                 pods_[i]->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
                 pods_[i]->SetRot(rot_);
@@ -1134,7 +1117,7 @@ void PlayerBase::Pod(POD_TYPE podType)
                 break;
             }
         }
-        // 既に撃ったので、下の発射処理を抜ける
+        //  既に撃ったので、下の発射処理を抜ける
         if (flag)
         {
             if (podFireCnt_ >= podBullet_)
@@ -1148,48 +1131,45 @@ void PlayerBase::Pod(POD_TYPE podType)
             return;
         }
 
-        // 空き配列が無かった場合の発射処理
+        //  空き配列が無かった場合の発射処理
         std::shared_ptr<WeaponBase> pod = nullptr;
         switch (podType)
         {
         case PlayerBase::POD_TYPE::BOUNCE:
             pod = std::make_shared<PodBounce>();
-            pod->Init(modelPodId_, blastImgs_, BLAST_ANIM_NUM);
-            pod->SetDistance(PythagorasDisXZ_);
-            pod->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
             break;
         case PlayerBase::POD_TYPE::FREEZE:
             pod = std::make_shared<PodFreeze>();
-            pod->Init(modelPodId_, blastImgs_, BLAST_ANIM_NUM);
-            pod->SetDistance(PythagorasDisXZ_);
-            pod->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
             break;
         case PlayerBase::POD_TYPE::MAX:
             break;
         default:
             pod = std::make_shared<PodBounce>();
-            pod->Init(modelPodId_, blastImgs_, BLAST_ANIM_NUM);
-            pod->SetDistance(PythagorasDisXZ_);
-            pod->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
             break;
         }
+
+        pod->SetInitial(modelPodId_, blastImgs_, BLAST_ANIM_NUM);
+        pod->Init();
+        pod->SetDistance(PythagorasDisXZ_);
+        pod->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
         pod->SetRot(rot_);
         pods_.push_back(pod);
         SoundPlayer(SE_TYPE::POD);
     }
     else if ((ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.POD) && delayPodCnt_ > delayPod_) && podType == POD_TYPE::STICKY)
     {
+        //   ポッドがスティッキーだった場合
 
-        // 空き配列が存在する場合はそこに弾情報を入れて、発射
+        //  空き配列が存在する場合はそこに弾情報を入れて、発射
         bool flag = false;
         size_t size = pods_.size();
         for (int i = 0; i < size; i++)
         {
-            // i番目の弾が生きていなかったら
+            //  i番目の弾が生きていなかったら
             if (!pods_[i]->IsAlive())
             {
-                // i番目の配列に弾を作る
-                pods_[i]->Init(modelPodId_, blastImgs_, BLAST_ANIM_NUM);
+                //  i番目の配列に弾を作る
+                pods_[i]->Init();
                 pods_[i]->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
                 pods_[i]->SetRot(rot_);
 
@@ -1199,18 +1179,19 @@ void PlayerBase::Pod(POD_TYPE podType)
                 break;
             }
         }
-        // 既に撃ったので、下の発射処理を抜ける
+        //  既に撃ったので、下の発射処理を抜ける
         if (flag)
         {
             delayPodCnt_ = 0;
             return;
         }
-        // 空き配列が無かった場合の発射処理
+        //  空き配列が無かった場合の発射処理
         if (pods_.size() < 2)
         {
             std::shared_ptr<WeaponBase> pod = nullptr;
             pod = std::make_shared<PodSticky>();
-            pod->Init(modelPodId_, blastImgs_, BLAST_ANIM_NUM);
+            pod->SetInitial(modelPodId_, blastImgs_, BLAST_ANIM_NUM);
+            pod->Init();
             pod->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
             pod->SetRot(rot_);
             pods_.push_back(pod);
@@ -1221,10 +1202,10 @@ void PlayerBase::Pod(POD_TYPE podType)
         }
         else
         {
-            // i番目の配列に弾を作る
+            //  i番目の配列に弾を作る
             if (newPod == 0)
             {
-                pods_[newPod+1]->Init(modelPodId_, blastImgs_, BLAST_ANIM_NUM);
+                pods_[newPod+1]->Init();
                 pods_[newPod+1]->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
                 pods_[newPod+1]->SetRot(rot_);
                 flag = true;
@@ -1234,7 +1215,7 @@ void PlayerBase::Pod(POD_TYPE podType)
             }
             else
             {
-                pods_[newPod - 1]->Init(modelPodId_, blastImgs_, BLAST_ANIM_NUM);
+                pods_[newPod - 1]->Init();
                 pods_[newPod - 1]->CreateWeapon(weaponPos_, weaponDir_, (int)playerNumber_);
                 pods_[newPod - 1]->SetRot(rot_);
                 flag = true;
@@ -1265,15 +1246,15 @@ void PlayerBase::Move(void)
 {
     Decelerate();
 
-    // カメラの角度に合わせて移動ベクトルを回転してから加算
+    //  カメラの角度に合わせて移動ベクトルを回転してから加算
     float CameraHAngle = SceneManager::GetInstance().GetCamera().lock()->GetHAngle();
 
-    // カメラの方向を考えない移動
+    //  カメラの方向を考えない移動
     VECTOR CharMoveVector = VScale(dir_, speed_);
-    // カメラの方向を加味した移動
+    //  カメラの方向を加味した移動
     VECTOR CharMoveVectorCamera;
 
-    // カメラの角度に合わせて移動ベクトルを回転してから加算
+    //  カメラの角度に合わせて移動ベクトルを回転してから加算
     float SinParam = sin(CameraHAngle / 180.0f * DX_PI_F);
     float CosParam = cos(CameraHAngle / 180.0f * DX_PI_F);
 
@@ -1281,7 +1262,7 @@ void PlayerBase::Move(void)
     CharMoveVectorCamera.y = 0.0f;
     CharMoveVectorCamera.z = CharMoveVector.x * SinParam + CharMoveVector.z * CosParam;
 
-    // エアダッシュ後にその慣性で移動してくれないのは、向きをコントローラー入力のみで決めているから　なのでエアダッシュの方向を入力する
+    //  エアダッシュ後にその慣性で移動してくれないのは、向きをコントローラー入力のみで決めているから　なのでエアダッシュの方向を入力する
     if (!isAirDash_ && alreadyAirDash_)
     {
         pos_ = VAdd(pos_, VScale(airDashVec_, 2.0f));
@@ -1289,18 +1270,18 @@ void PlayerBase::Move(void)
     else if (!isAirDash_)
     {
 
-        // 移動処理
+        //  移動処理
         pos_ = VAdd(pos_, CharMoveVectorCamera);
     }
 
-    // ステージモデルとの衝突判定
+    //  ステージモデルとの衝突判定
     VECTOR capsuleSPos = VAdd(pos_, { 0.0f,70.0f,0.0f });
     VECTOR capsuleEPos = VAdd(pos_, { 0.0f,25.0f,0.0f });
     int capsuleRadius = 25;
 
 
     auto hit = MV1CollCheck_Capsule(modelStageId_, -1, capsuleSPos, capsuleEPos, capsuleRadius);
-    // MV1Coll…で当たっているポリゴン数が0より大きかったら（当たっていたら）
+    //  MV1Coll…で当たっているポリゴン数が0より大きかったら（当たっていたら）
     if (hit.HitNum > 0)
     {
         int HitNum = hit.HitNum;
@@ -1312,19 +1293,19 @@ void PlayerBase::Move(void)
             VECTOR hitPoliPos1 = hitDim.Position[1];
             VECTOR hitPoliPos2 = hitDim.Position[2];
 
-            // 当たっていたら、当たらなくなるまで法線ベクトル方向に100回戻す
+            //  当たっていたら、当たらなくなるまで法線ベクトル方向に100回戻す
             for (int a = 0; a < 100; a++)
             {
-                // このループ内での当たり判定Pos
+                //  このループ内での当たり判定Pos
                 VECTOR tmpCapsuleSPos = VAdd(pos_, { 0.0f,70.0f,0.0f });
                 VECTOR tmpCapsuleEPos = VAdd(pos_, { 0.0f,25.0f,0.0f });
                 capsuleRadius = 25;
-                // 当たっていたら位置を少し戻す
+                //  当たっていたら位置を少し戻す
                 if (HitCheck_Capsule_Triangle(tmpCapsuleSPos, tmpCapsuleEPos, capsuleRadius, hitPoliPos0, hitPoliPos1, hitPoliPos2))
                 {
                     pos_ = VAdd(pos_, VScale(hitDim.Normal, 0.5f));
                 }
-                // 当たっていなかったら処理を終了する
+                //  当たっていなかったら処理を終了する
                 else
                 {
                     break;
@@ -1334,7 +1315,7 @@ void PlayerBase::Move(void)
     }
 
     hit = MV1CollCheck_Capsule(modelStageCoverId_, -1, capsuleSPos, capsuleEPos, capsuleRadius);
-    // MV1Coll…で当たっているポリゴン数が0より大きかったら（当たっていたら）
+    //  MV1Coll…で当たっているポリゴン数が0より大きかったら（当たっていたら）
     if (hit.HitNum > 0)
     {
         int HitNum = hit.HitNum;
@@ -1346,19 +1327,19 @@ void PlayerBase::Move(void)
             VECTOR hitPoliPos1 = hitDim.Position[1];
             VECTOR hitPoliPos2 = hitDim.Position[2];
 
-            // 当たっていたら、当たらなくなるまで法線ベクトル方向に100回戻す
+            //  当たっていたら、当たらなくなるまで法線ベクトル方向に100回戻す
             for (int a = 0; a < 100; a++)
             {
-                // このループ内での当たり判定Pos
+                //  このループ内での当たり判定Pos
                 VECTOR tmpCapsuleSPos = VAdd(pos_, { 0.0f,70.0f,0.0f });
                 VECTOR tmpCapsuleEPos = VAdd(pos_, { 0.0f,25.0f,0.0f });
                 capsuleRadius = 25;
-                // 当たっていたら位置を少し戻す
+                //  当たっていたら位置を少し戻す
                 if (HitCheck_Capsule_Triangle(tmpCapsuleSPos, tmpCapsuleEPos, capsuleRadius, hitPoliPos0, hitPoliPos1, hitPoliPos2))
                 {
                     pos_ = VAdd(pos_, VScale(hitDim.Normal, 0.5f));
                 }
-                // 当たっていなかったら処理を終了する
+                //  当たっていなかったら処理を終了する
                 else
                 {
                     break;
@@ -1385,7 +1366,7 @@ void PlayerBase::Move(void)
         airDashCnt_ = 0;
         isSpriteEnd_ = false;
 
-        // 地面に乗っていたら、重力がかからない
+        //  地面に乗っていたら、重力がかからない
         for (int i = 0; i < hitLeg.HitNum; i++)
         {
             if (hitLeg.Dim[i].Normal.x <= 0.1f || hitLeg.Dim[i].Normal.z <= 0.1f)
@@ -1409,55 +1390,55 @@ void PlayerBase::Turn(void)
 {
     auto& ins = InputManager::GetInstance();
 
-    // プレイヤーの入力を検知する
+    //  プレイヤーの入力を検知する
     auto playerCtl = ins.GetJPadInputState(static_cast<InputManager::JOYPAD_NO>(playerNumber_));
 
-    // PlayerとEnemyのベクトル
+    //  PlayerとEnemyのベクトル
     VECTOR PlVec = { pos_.x,pos_.y,pos_.z };
     VECTOR EnVec = { enemyPos_.x,enemyPos_.y,enemyPos_.z };
 
-    // PlayerからEnemyへのベクトル
+    //  PlayerからEnemyへのベクトル
     VECTOR PlEnVec = VAdd(EnVec, VScale(PlVec, -1.0f));
 
-    // プレイヤー向き変更
+    //  プレイヤー向き変更
     if (playerCtl.AKeyRX == 0 && playerCtl.AKeyRY == 0)
     {
-        // ここに通常時の向きを入力(右スティック入力がない限りプレイヤー2の方を向き続ける)
+        //  ここに通常時の向きを入力(右スティック入力がない限りプレイヤー2の方を向き続ける)
         
         //アークタンジェントでプレイヤー敵間の角度を出す
         float PlEnAngleY = atan2(-PlEnVec.z, PlEnVec.x);
 
-        // 今向いてる方向のデグリー角
+        //  今向いてる方向のデグリー角
         float degNowAngleY = AsoUtility::Rad2DegF(rot_.y);
-        // 向きたい方向(敵への方向)のデグリー角
+        //  向きたい方向(敵への方向)のデグリー角
         float degGoalAngleY = AsoUtility::Rad2DegF(PlEnAngleY - (90.0f * DX_PI_F / 180.0f));
 
-        // 0度～360度以内に角度をおさめる
+        //  0度～360度以内に角度をおさめる
         degGoalAngleY = static_cast<float>(AsoUtility::DegIn360(degGoalAngleY));
 
-        // 右方向と左方向どっち回りの方が近いか
+        //  右方向と左方向どっち回りの方が近いか
         int aroundDir = AsoUtility::DirNearAroundDeg(degNowAngleY, degGoalAngleY);
 
-        // もし、目的の角度まで4度より差があったら
+        //  もし、目的の角度まで4度より差があったら
         if (!(degGoalAngleY - degNowAngleY < 8.0f && degGoalAngleY - degNowAngleY > -8.0f))
         {
-            // 回転スピードを足す
+            //  回転スピードを足す
             rot_.y += (aroundDir * SPEED_ROT_RAD);
         }
         else 
         {
-            // 向きたい方向にする(ラジアン角)
+            //  向きたい方向にする(ラジアン角)
             rot_.y = PlEnAngleY - (90.0f * DX_PI_F / 180.0f);
         };
 
-        // 0度～360度以内に角度をおさめる
+        //  0度～360度以内に角度をおさめる
         rot_.y = static_cast<float>(AsoUtility::RadIn2PI(rot_.y));
 
     }
     else
     {
-        // ここに右スティック入力時の向きを入力
-        // スティック入力角度(X,Y要素それぞれ0~1000)
+        //  ここに右スティック入力時の向きを入力
+        //  スティック入力角度(X,Y要素それぞれ0~1000)
         float stickAngle = atan2(playerCtl.AKeyRY, playerCtl.AKeyRX);
 
         float CameraHAngle = SceneManager::GetInstance().GetCamera().lock()->GetHAngle();
@@ -1467,7 +1448,7 @@ void PlayerBase::Turn(void)
         float degNowAngleY = AsoUtility::Rad2DegF(rot_.y);
         float degGoalAngleY = AsoUtility::Rad2DegF(stickAngle - (90.0f * DX_PI_F / 180.0f));
 
-        // 0度～360度以内に角度をおさめる
+        //  0度～360度以内に角度をおさめる
         degGoalAngleY = static_cast<float>(AsoUtility::DegIn360(degGoalAngleY));
 
         int aroundDir = AsoUtility::DirNearAroundDeg(degNowAngleY, degGoalAngleY);
@@ -1481,58 +1462,58 @@ void PlayerBase::Turn(void)
             rot_.y = stickAngle - (90.0f * DX_PI_F / 180.0f);
         };
 
-        // 0度～360度以内に角度をおさめる
+        //  0度～360度以内に角度をおさめる
         rot_.y = static_cast<float>(AsoUtility::RadIn2PI(rot_.y));
     }
 
-    // 弾のX軸回転を行うための角度を作る
+    //  弾のX軸回転を行うための角度を作る
     
-    // プレイヤー、敵間の距離を求める
+    //  プレイヤー、敵間の距離を求める
     float distanceX = enemyPos_.x - pos_.x;
     float distanceZ = enemyPos_.z - pos_.z;
     float distanceY = enemyPos_.y - pos_.y;
 
-    // ピタゴラスの定理でXZ平面での直線距離を求める
+    //  ピタゴラスの定理でXZ平面での直線距離を求める
     PythagorasDisXZ_ = fabsf(sqrt((distanceX * distanceX) + (distanceZ * distanceZ)));
-    // プレイヤー、敵の高さも考慮した直線距離を求める
+    //  プレイヤー、敵の高さも考慮した直線距離を求める
     weaponDir_.x = atan2(-distanceY, PythagorasDisXZ_);
     bombDir_.x = atan2(-BOMB_HIGHEST, PythagorasDisXZ_);
 
-    // ↓弾の方向を決める
-    // 単位行列(無回転の状態)
+    //  ↓弾の方向を決める
+    //  単位行列(無回転の状態)
     MATRIX matRot = MGetIdent();
 
-    // それぞれの軸の行列を作り、更に行列を合成していく
-    // MMult  :行列の乗算を行う
-    // MgetRot:引数の回転地だけ軸回転する回転行列を戻り値にする（この場合はbarrelRot度回転する回転行列）
+    //  それぞれの軸の行列を作り、更に行列を合成していく
+    //  MMult  :行列の乗算を行う
+    //  MgetRot:引数の回転地だけ軸回転する回転行列を戻り値にする（この場合はbarrelRot度回転する回転行列）
     matRot = MMult(matRot, MGetRotX(weaponDir_.x));
     matRot = MMult(matRot, MGetRotY(rot_.y+ AsoUtility::Deg2RadF(180.0f)));
     matRot = MMult(matRot, MGetRotZ(rot_.z));
 
     MATRIX matRotBomb = MGetIdent();
-    // それぞれの軸の行列を作り、更に行列を合成していく
-    // MMult  :行列の乗算を行う
-    // MgetRot:引数の回転地だけ軸回転する回転行列を戻り値にする（この場合はbarrelRot度回転する回転行列）
+    //  それぞれの軸の行列を作り、更に行列を合成していく
+    //  MMult  :行列の乗算を行う
+    //  MgetRot:引数の回転地だけ軸回転する回転行列を戻り値にする（この場合はbarrelRot度回転する回転行列）
     matRotBomb = MMult(matRotBomb, MGetRotX(bombDir_.x));
     matRotBomb = MMult(matRotBomb, MGetRotY(rot_.y + AsoUtility::Deg2RadF(180.0f)));
     matRotBomb = MMult(matRotBomb, MGetRotZ(rot_.z));
 
-    // 回転行列を使用して、方向ベクトルを回転させる
+    //  回転行列を使用して、方向ベクトルを回転させる
     weaponDir_ = VTransform({ 0.0f,0.0f,1.0f }, matRot);
     bombDir_ = VTransform({ 0.0f,0.0f,1.0f }, matRotBomb);
 
-    // 方向ベクトルと同じ要領で、弾の相対座標を回転
+    //  方向ベクトルと同じ要領で、弾の相対座標を回転
     VECTOR localPosRot = VTransform(shotLocalPos_, matRot);
 
-    // 弾の位置を設定
+    //  弾の位置を設定
     weaponPos_ = VAdd(VAdd(pos_ ,shotLocalPos_), localPosRot);
 
 }
 
 void PlayerBase::Attack(void)
 {
-    // リカバリーでも無敵使いたいから、明らかにinvincibleの色々でifを作るべきではなかった。STATUSを変えてあとで処理分けがベストだったなぁ
-    // STATUSの管理がムズい。Aの条件を満たしてるからステータスαにしたいけどBの条件も満たしてるからステータスβにもしたがってる場合どうするか・・・
+    //  リカバリーでも無敵使いたいから、明らかにinvincibleの色々でifを作るべきではなかった。STATUSを変えてあとで処理分けがベストだったなぁ
+    //  STATUSの管理がムズい。Aの条件を満たしてるからステータスαにしたいけどBの条件も満たしてるからステータスβにもしたがってる場合どうするか・・・
 
     if (!invincible_)
     {
@@ -1541,7 +1522,7 @@ void PlayerBase::Attack(void)
 
     auto& ins = InputManager::GetInstance();
 
-    // 弾処理
+    //  弾処理
     if (!(ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.TACKLE))&&(invincibleCnt_ > InvincibleCntMax) || isJump_ || isShot_)
     {
         invincible_ = false;
@@ -1561,7 +1542,7 @@ void PlayerBase::Attack(void)
             delayAttackCnt_ = 0;
             invincibleCnt_ = 0;
 
-            // PlayerとEnemyのベクトル
+            //  PlayerとEnemyのベクトル
             VECTOR PlVec = { pos_.x,0.0f,pos_.z };
             VECTOR EnVec = { enemyPos_.x,0.0f,enemyPos_.z };
             attackPlEnVec_ = VAdd(EnVec, VScale(PlVec, -1.0f));
@@ -1573,21 +1554,21 @@ void PlayerBase::Attack(void)
     }
 
 
-    // 無敵時間カウンタが無敵時間未満だったら
+    //  無敵時間カウンタが無敵時間未満だったら
     if (invincibleCnt_ < InvincibleCntMax && attackFlag == true)
     {
-        // 突進
+        //  突進
 
-        // MAXで移動距離を割ることによって、動く距離がちょうど敵までになるはず・・・？
+        //  MAXで移動距離を割ることによって、動く距離がちょうど敵までになるはず・・・？
         pos_.x += attackPlEnVec_.x * 30.0f;
         pos_.z += attackPlEnVec_.z * 30.0f;
         
-        // 無敵フラグをON
+        //  無敵フラグをON
         invincible_ = true;
     }
     else
     {
-        // 無敵OFF
+        //  無敵OFF
         invincible_ = false;
 
         speed_ = 0.0f;
@@ -1612,10 +1593,10 @@ void PlayerBase::ProcessJump(void)
 {
     auto& ins = InputManager::GetInstance();
 
-    // プレイヤーの入力を検知する
+    //  プレイヤーの入力を検知する
     auto playerCtl = ins.GetJPadInputState(static_cast<InputManager::JOYPAD_NO>(playerNumber_));
 
-    // 接地していないと、ジャンプを開始できないようにする
+    //  接地していないと、ジャンプを開始できないようにする
     if (ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.JUMP) && !isJump_)
     {
         isJump_ = true;
@@ -1626,7 +1607,7 @@ void PlayerBase::ProcessJump(void)
     //入力時間に応じて、ジャンプ量を変動させる
     if (ins.IsPadBtnNew(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.JUMP) && cntJumpInput_ < INPUT_JUMP_FRAME && isPutJumpKey_)
     {
-        // ジャンプカウンタを増やす
+        //  ジャンプカウンタを増やす
         cntJumpInput_++;
         float pow = jumpPow_ + MAX_JUMP_POW / INPUT_JUMP_FRAME;
         SetJumpPow(pow);
@@ -1635,7 +1616,7 @@ void PlayerBase::ProcessJump(void)
 
     if (ins.IsPadBtnTrgUp(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.JUMP))
     {
-        // ジャンプボタンが離されたとき
+        //  ジャンプボタンが離されたとき
         cntJumpInput_ = INPUT_JUMP_FRAME;
     }
 
@@ -1658,10 +1639,10 @@ void PlayerBase::Jump(void)
 
 void PlayerBase::SetJumpPow(float jumpPow)
 {
-    // ジャンプ力を設定
+    //  ジャンプ力を設定
     jumpPow_ = jumpPow;
 
-    // ジャンプしすぎを防ぐ
+    //  ジャンプしすぎを防ぐ
     if (jumpPow_ > MAX_JUMP_POW)
     {
         jumpPow_ = MAX_JUMP_POW;
@@ -1670,7 +1651,7 @@ void PlayerBase::SetJumpPow(float jumpPow)
 
 void PlayerBase::AddGravity(void)
 {
-    // 空中ダッシュ中は重力無視
+    //  空中ダッシュ中は重力無視
     if (isAirDash_)
     {
         return;
@@ -1701,13 +1682,13 @@ void PlayerBase::AirDash(void)
         SetJumpPow(0.0f);
 
 
-        // プレイヤー1（とりあえず1のみ）の入力を検知する
+        //  プレイヤー1（とりあえず1のみ）の入力を検知する
         auto playerCtl = ins.GetJPadInputState(static_cast<InputManager::JOYPAD_NO>(playerNumber_));
 
         int dirX = playerCtl.AKeyLX;
         int dirZ = playerCtl.AKeyLY * -1;
 
-        // スティックの倒し段階にかかわらず移動距離を一定にしたいので、入力が0～10の1段階目になったら値を固定する
+        //  スティックの倒し段階にかかわらず移動距離を一定にしたいので、入力が0～10の1段階目になったら値を固定する
         if (dirX >= 1)
         {
             dirX = 3;
@@ -1724,7 +1705,7 @@ void PlayerBase::AirDash(void)
         {
             dirZ = -3;
         }
-        // 空中ダッシュ方向の設定
+        //  空中ダッシュ方向の設定
         airDashDir_.x = dirX;
         airDashDir_.z = dirZ;
 
@@ -1732,11 +1713,11 @@ void PlayerBase::AirDash(void)
     }
     if (isAirDash_)
     {
-        // カメラの角度に合わせて移動ベクトルを回転してから加算
+        //  カメラの角度に合わせて移動ベクトルを回転してから加算
         float CameraHAngle = SceneManager::GetInstance().GetCamera().lock()->GetHAngle();
         VECTOR MoveVector = VScale(airDashDir_, airDashSpeed_);
 
-        // カメラの角度に合わせて移動ベクトルを回転してから加算
+        //  カメラの角度に合わせて移動ベクトルを回転してから加算
         float SinParam = sin(CameraHAngle / 180.0f * DX_PI_F);
         float CosParam = cos(CameraHAngle / 180.0f * DX_PI_F);
 
@@ -1755,7 +1736,7 @@ void PlayerBase::AirDash(void)
             airDashSpeed_ = 0.0f;
         }
 
-        // 移動処理
+        //  移動処理
         pos_ = VAdd(pos_, VScale(airDashVec_, airDashSpeed_));
 
         if (airDashSpeed_ > 0)
@@ -1780,7 +1761,7 @@ void PlayerBase::Stun(void)
     size_t size = shots_.size();
     for (int i = 0; i < size; i++)
     {
-        // i番目の弾が生きていたら
+        //  i番目の弾が生きていたら
         if (shots_[i]->IsAlive())
         {
             shots_[i]->Blast();
@@ -1790,7 +1771,7 @@ void PlayerBase::Stun(void)
     size = pods_.size();
     for (int i = 0; i < size; i++)
     {
-        // i番目の弾が生きていたら
+        //  i番目の弾が生きていたら
         if (pods_[i]->IsAlive())
         {
             pods_[i]->Blast();
@@ -1800,7 +1781,7 @@ void PlayerBase::Stun(void)
     if (stunCnt_ > 180 || stunDmg_ >= 100)
     {
         RecoveryInit();
-        // ステータスをそのままいじってるけど、リカバリー関数を用意すべき（ステータスを戻したり、無敵時間をくれる）
+        //  ステータスをそのままいじってるけど、リカバリー関数を用意すべき（ステータスを戻したり、無敵時間をくれる）
     }
     if (status_ == STATUS::STUN)
     {
@@ -1870,7 +1851,7 @@ void PlayerBase::ShotUpdate(void)
     size_t size = shots_.size();
     for (int i = 0; i < size; i++)
     {
-        // i番目の弾が生きていたら
+        //  i番目の弾が生きていたら
         if (shots_[i]->IsAlive())
         {
             shots_[i]->Update();
@@ -1880,7 +1861,7 @@ void PlayerBase::ShotUpdate(void)
     size = bombs_.size();
     for (int i = 0; i < size; i++)
     {
-        // i番目の弾が生きていたら
+        //  i番目の弾が生きていたら
         if (bombs_[i]->IsAlive())
         {
             bombs_[i]->Update();
@@ -1890,7 +1871,7 @@ void PlayerBase::ShotUpdate(void)
     size = pods_.size();
     for (int i = 0; i < size; i++)
     {
-        // i番目の弾が生きていたら
+        //  i番目の弾が生きていたら
         if (pods_[i]->IsAlive())
         {
             pods_[i]->Update();

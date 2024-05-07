@@ -5,17 +5,17 @@
 
 void PodBounce::SetParam(void)
 {
-	// 使用メモリ容量と読み込み時間削減のため
-// モデルデータをいくつもメモリ上に存在させない
+	//  使用メモリ容量と読み込み時間削減のため
+//  モデルデータをいくつもメモリ上に存在させない
 	modelId_ = MV1DuplicateModel(baseModelId_);
 
-	// 弾の大きさを設定
+	//  弾の大きさを設定
 	scl_ = { 0.15f,0.15f,0.15f };
 
-	// 弾の角度を設定
+	//  弾の角度を設定
 	rot_ = { 0.0f,0.0f,0.0f };
 
-	// 弾の速度
+	//  弾の速度
 	speed_ = 8.0f;
 
 	hpDamage_ = 56;
@@ -31,7 +31,7 @@ void PodBounce::SetParam(void)
 
 void PodBounce::UpdateWeapon(void)
 {
-	// 地面と平行にしか移動しないためY方向を0に
+	//  地面と平行にしか移動しないためY方向を0に
 	if (pos_.y > 25.0f)
 	{
 		dir_.y = -1.0f;
@@ -45,19 +45,19 @@ void PodBounce::UpdateWeapon(void)
 	rot_.z += AsoUtility::Rad2DegF(AsoUtility::Deg2RadF(1.0f) - fabsf(dir_.x));
 
 
-	// 移動量の計算(方向*スピード)
+	//  移動量の計算(方向*スピード)
 	VECTOR movePow = VScale(dir_, speed_);
 
-	// 移動処理(座標+移動量) 落下を考えていない
+	//  移動処理(座標+移動量) 落下を考えていない
 	pos_ = VAdd(pos_, movePow);
 
-	// 大きさの設定
+	//  大きさの設定
 	MV1SetScale(modelId_, scl_);
 
-	// 角度の設定
+	//  角度の設定
 	MV1SetRotationXYZ(modelId_, rot_);
 
-	// 位置の設定
+	//  位置の設定
 	MV1SetPosition(modelId_, pos_);
 }
 
@@ -72,11 +72,11 @@ void PodBounce::UpdateBlast(void)
 	else
 	{
 		bounceCnt_ = 0;
-		// アニメーション処理
+		//  アニメーション処理
 		blastIdxAnim_++;
-		// アニメーションが終了したら、STATEをENDへ
+		//  アニメーションが終了したら、STATEをENDへ
 
-		// 爆発アニメーションの終了判定
+		//  爆発アニメーションの終了判定
 		if (blastIdxAnim_ + 1 >= blastAnimNum_)
 		{
 			blastIdxAnim_ = 0;

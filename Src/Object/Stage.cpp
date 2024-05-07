@@ -3,7 +3,7 @@
 #include "../Manager/ResourceManager.h"
 #include "Stage.h"
 
-Stage::Stage(void)
+Stage::Stage(void):resMng_(ResourceManager::GetInstance())
 {
 }
 
@@ -14,14 +14,14 @@ Stage::~Stage(void)
 void Stage::Init(void)
 {
 	
-	// 外部ファイルの3Dモデルをロード
-	modelId_ = MV1LoadModel((Application::PATH_MODEL + "Stage/Stage.mv1").c_str());
-	coverModelId_ = MV1LoadModel((Application::PATH_MODEL + "Stage/Cover.mv1").c_str());
-	charId_ = MV1LoadModel((Application::PATH_MODEL + "Stage/Moji.mv1").c_str());
+	//  外部ファイルの3Dモデルをロード
+	modelId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_STAGE);
+	coverModelId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_COVER);
+	charId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_CHAR);
 
-	modelSkyId_ = MV1LoadModel((Application::PATH_MODEL + "Stage/Sky.mv1").c_str());
+	modelSkyId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SKYDOME);
 
-	// 3Dモデルの大きさを設定(引数はXYZの倍数)
+	//  3Dモデルの大きさを設定(引数はXYZの倍数)
 	MV1SetScale(modelId_, { 1.0f,1.0f,1.0f });
 	MV1SetScale(coverModelId_, { 1.0f,1.0f,1.0f });
 
@@ -29,21 +29,21 @@ void Stage::Init(void)
 	
 	MV1SetScale(modelSkyId_, {2.0f,2.0f,2.0f });
 
-	// 3Dモデルの位置(引数は3D座標)
+	//  3Dモデルの位置(引数は3D座標)
 	MV1SetPosition(modelId_, { 0.0f,0.0f,0.0f });
 	MV1SetPosition(coverModelId_, { 0.0f,0.0f,0.0f });
 
 	MV1SetPosition(charId_, { 0.0f,0.0f,0.0f });
 	MV1SetPosition(modelSkyId_, { 0.0f,0.0f,0.0f });
 
-	// 3Dモデルの向き(引数は、XYZの回転量 単位はラジアン)
+	//  3Dモデルの向き(引数は、XYZの回転量 単位はラジアン)
 	MV1SetRotationXYZ(modelId_, { 0.0f,0.0f,0.0f });
 	MV1SetRotationXYZ(coverModelId_, { 0.0f,0.0f,0.0f });
 
 	MV1SetRotationXYZ(charId_, { 0.0f,0.0f,0.0f });
 	MV1SetRotationXYZ(modelSkyId_, { 0.0f,0.0f,0.0f });
 
-	// 衝突判定情報(コライダ)の作成
+	//  衝突判定情報(コライダ)の作成
 	MV1SetupCollInfo(modelId_);
 	MV1SetupCollInfo(coverModelId_);
 
@@ -57,11 +57,11 @@ void Stage::Update(void)
 void Stage::Draw(void)
 {
 
-	// 描画に使用するシャドウマップを設定
+	//  描画に使用するシャドウマップを設定
 	SetUseShadowMap(0, shadowH);
-	// モデルの描画
+	//  モデルの描画
 	MV1DrawModel(modelId_);
-	// 描画に使用するシャドウマップの設定を解除
+	//  描画に使用するシャドウマップの設定を解除
 	SetUseShadowMap(0, -1);
 
 	MV1DrawModel(charId_);
@@ -71,7 +71,7 @@ void Stage::Draw(void)
 
 void Stage::Release(void)
 {
-	// ロードされた3Dモデルをメモリから解放
+	//  ロードされた3Dモデルをメモリから解放
 	MV1DeleteModel(modelId_);
 	MV1DeleteModel(coverModelId_);
 	MV1DeleteModel(charId_);

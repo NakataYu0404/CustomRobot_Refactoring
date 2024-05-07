@@ -1,15 +1,16 @@
 #pragma once
 #include "SceneBase.h"
+class ResourceManager;
 
 class TitleScene : public SceneBase
 {
 
 public:
 
-	// コンストラクタ
+	//  コンストラクタ
 	TitleScene(void);
 
-	// デストラクタ
+	//  デストラクタ
 	~TitleScene(void);
 
 	void Init(void) override;
@@ -19,8 +20,10 @@ public:
 
 private:
 
-	// 画像
+	//  画像
 	int imgTitle_;
 	int modelSkyId_;
 	float rotY_;
+
+	ResourceManager& resMng_;
 };

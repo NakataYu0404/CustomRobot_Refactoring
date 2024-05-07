@@ -2,12 +2,13 @@
 #include <DxLib.h>
 #include "../Application.h"
 #include "../Utility/AsoUtility.h"
+#include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/Camera.h"
 #include "../Manager/InputManager.h"
 #include "TitleScene.h"
 
-TitleScene::TitleScene(void)
+TitleScene::TitleScene(void) :resMng_(ResourceManager::GetInstance())
 {
 	imgTitle_ = -1;
 }
@@ -18,10 +19,10 @@ TitleScene::~TitleScene(void)
 
 void TitleScene::Init(void)
 {
-	imgTitle_ = LoadGraph((Application::PATH_IMAGE + "Title.png").c_str());
+	imgTitle_ = resMng_.Load(ResourceManager::SRC::IMG_TITLE).handleId_;
 
 	SceneManager::GetInstance().GetCamera().lock()->ChangeMode(Camera::MODE::TITLE);
-	modelSkyId_ = MV1LoadModel((Application::PATH_MODEL + "Stage/Sky.mv1").c_str());
+	modelSkyId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SKYDOME);
 	rotY_ = 0.0f;
 }
 
@@ -33,7 +34,7 @@ void TitleScene::Update(void)
 	MV1SetRotationXYZ(modelSkyId_, { 0.0f,rotY_,0.0f });
 	rotY_ += 0.005f;
 
-	// シーン遷移
+	//  シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN)|| ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD2, InputManager::JOYPAD_BTN::DOWN)|| ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::RIGHT)||ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD2, InputManager::JOYPAD_BTN::RIGHT))
 	{
@@ -50,7 +51,7 @@ void TitleScene::Draw(void)
 	MV1DrawModel(modelSkyId_);
 
 
-	// UI
+	//  UI
 	DrawGraph(0,0,imgTitle_, true);
 
 

@@ -6,13 +6,13 @@ public:
 	int x;
 	int y;
 
-	// コンストラクタ
+	//  コンストラクタ
 	Vector3(void);
 
-	// コンストラクタ
+	//  コンストラクタ
 	Vector3(int vX, int vY);
 
-	// デストラクタ
+	//  デストラクタ
 	~Vector3(void);
 
 };

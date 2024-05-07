@@ -13,7 +13,7 @@ class SceneManager
 
 public:
 
-	// シーン管理用
+	//  シーン管理用
 	enum class SCENE_ID
 	{
 		NONE,
@@ -22,10 +22,10 @@ public:
 		GAME
 	};
 	
-	// インスタンスの生成
+	//  インスタンスの生成
 	static void CreateInstance(void);
 
-	// インスタンスの取得
+	//  インスタンスの取得
 	static SceneManager& GetInstance(void);
 
 	void Init(void);
@@ -34,67 +34,67 @@ public:
 	void Draw(void);
 	void Release(void);
 
-	// 状態遷移
+	//  状態遷移
 	void ChangeScene(SCENE_ID nextId);
 
-	// シーンIDの取得
+	//  シーンIDの取得
 	SCENE_ID GetSceneID(void);
 
-	// デルタタイムの取得
+	//  デルタタイムの取得
 	float GetDeltaTime(void) const;
 
-	// Cameraポインタを取得
+	//  Cameraポインタを取得
 	std::weak_ptr<Camera> GetCamera(void);
 
 	static constexpr float DEFAULT_FPS = 60.0f;
 
-	// 重力
+	//  重力
 	static constexpr float GRAVITY = 9.81f;
 
 private:
 
-	// 静的インスタンス
+	//  静的インスタンス
 	static SceneManager* instance_;
 
 	SCENE_ID sceneId_;
 	SCENE_ID waitSceneId_;
 
-	// カメラ
+	//  カメラ
 	std::shared_ptr<Camera> camera_;
 
-	// フェード
+	//  フェード
 	std::unique_ptr<Fader> fader_;
 
 
 
-	// 各種シーン
+	//  各種シーン
 	std::shared_ptr<SceneBase> scene_;
 
 	std::shared_ptr<CustomScene> custom_;
 	std::shared_ptr<GameScene> game_;
 
-	// シーン遷移中判定
+	//  シーン遷移中判定
 	bool isSceneChanging_;
 
-	// デルタタイム
+	//  デルタタイム
 	std::chrono::system_clock::time_point preTime_;
 	float deltaTime_;
 	
-	// デフォルトコンストラクタをprivateにして、
-	// 外部から生成できない様にする
+	//  デフォルトコンストラクタをprivateにして、
+	//  外部から生成できない様にする
 	SceneManager(void);
-	// コピーコンストラクタも同様
+	//  コピーコンストラクタも同様
 	SceneManager(const SceneManager&);
-	// デストラクタも同様
+	//  デストラクタも同様
 	~SceneManager(void);
 
-	// デルタタイムをリセットする
+	//  デルタタイムをリセットする
 	void ResetDeltaTime(void);
 
-	// シーン遷移
+	//  シーン遷移
 	void DoChangeScene(SCENE_ID sceneId);
 
-	// フェード
+	//  フェード
 	void Fade(void);
 
 

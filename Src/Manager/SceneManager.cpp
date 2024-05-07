@@ -39,31 +39,31 @@ void SceneManager::Init(void)
 
 	isSceneChanging_ = false;
 
-	// デルタタイム
+	//  デルタタイム
 	preTime_ = std::chrono::system_clock::now();
 
-	// 3D用の初期化
+	//  3D用の初期化
 	Init3D();
 
-	// 初期シーンの設定
+	//  初期シーンの設定
 	DoChangeScene(SCENE_ID::TITLE);
 
 }
 
 void SceneManager::Init3D(void)
 {
-	// 背景色設定
+	//  背景色設定
 	SetBackgroundColor(0, 139, 139);
-	// 奥行を考えるように
+	//  奥行を考えるように
 	SetUseZBuffer3D(true);
 	SetWriteZBuffer3D(true);
-	// カメラに映らない部分を描画しないように
+	//  カメラに映らない部分を描画しないように
 	SetUseBackCulling(true);
 
-	// ライトを有効に
+	//  ライトを有効に
 	SetUseLighting(true);
-	// ディレクショナルライト方向の設定
-	// 上から下に向かうライト
+	//  ディレクショナルライト方向の設定
+	//  上から下に向かうライト
 	ChangeLightTypeDir({ 0.00f,-1.00f,0.0f });
 
 }
@@ -76,7 +76,7 @@ void SceneManager::Update(void)
 		return;
 	}
 
-	// デルタタイム
+	//  デルタタイム
 	auto nowTime = std::chrono::system_clock::now();
 	deltaTime_ = static_cast<float>(
 		std::chrono::duration_cast<std::chrono::nanoseconds>(nowTime - preTime_).count() / 1000000000.0);
@@ -103,25 +103,25 @@ void SceneManager::Update(void)
 void SceneManager::Draw(void)
 {
 	
-	// 描画先グラフィック領域の指定
-	// (３Ｄ描画で使用するカメラの設定などがリセットされる)
+	//  描画先グラフィック領域の指定
+	//  (３Ｄ描画で使用するカメラの設定などがリセットされる)
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	// 画面を初期化
+	//  画面を初期化
 	ClearDrawScreen();
 
-	// カメラ設定
+	//  カメラ設定
 	camera_->SetBeforeDraw();
 
-	// 描画
+	//  描画
 	scene_->Draw();
 
-	// カメラデバッグ用
+	//  カメラデバッグ用
 	camera_->Draw();
 
 
 
-	// 暗転・明転
+	//  暗転・明転
 	fader_->Draw();
 
 
@@ -140,11 +140,11 @@ void SceneManager::Release(void)
 void SceneManager::ChangeScene(SCENE_ID nextId)
 {
 
-	// フェード処理が終わってからシーンを変える場合もあるため、
-	// 遷移先シーンをメンバ変数に保持
+	//  フェード処理が終わってからシーンを変える場合もあるため、
+	//  遷移先シーンをメンバ変数に保持
 	waitSceneId_ = nextId;
 
-	// フェードアウト(暗転)を開始する
+	//  フェードアウト(暗転)を開始する
 	fader_->SetFade(Fader::STATE::FADE_OUT);
 	isSceneChanging_ = true;
 
@@ -177,7 +177,7 @@ SceneManager::SceneManager(void)
 
 	isSceneChanging_ = false;
 
-	// デルタタイム
+	//  デルタタイム
 	deltaTime_ = 1.0f / 60.0f;
 
 }
@@ -196,20 +196,20 @@ void SceneManager::ResetDeltaTime(void)
 void SceneManager::DoChangeScene(SCENE_ID sceneId)
 {
 
-	// シーンID変更前にカスタムシーンだったら(次がゲーム)
+	//  シーンID変更前にカスタムシーンだったら(次がゲーム)
 	if (sceneId_ == SCENE_ID::CUSTOM)
 	{
-		// プレイヤーのポインタを保管して、ゲームシーンに横流ししたい
+		//  プレイヤーのポインタを保管して、ゲームシーンに横流ししたい
 		for (int i = 0; i < 2; i++)
 		{
 			player_[i] = custom_->GetPlayer(i);
 		}
 	}
 
-	// シーンを変更する
+	//  シーンを変更する
 	sceneId_ = sceneId;
 
-	// 現在のシーンを解放
+	//  現在のシーンを解放
 	if (scene_ != nullptr)
 	{
 		scene_->Release();
@@ -227,13 +227,13 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	case SCENE_ID::GAME:
 		scene_ = std::make_shared<GameScene>();
 		game_ = std::dynamic_pointer_cast<GameScene>(scene_);
-		// 保管したポインタをゲームシーンに送る
+		//  保管したポインタをゲームシーンに送る
 
 		game_->SetPlayer(player_);
 		break;
 	}
 
-	// 変更後のシーンがゲームだったら
+	//  変更後のシーンがゲームだったら
 	if (sceneId_ == SCENE_ID::GAME)
 	{
 	}
@@ -253,23 +253,23 @@ void SceneManager::Fade(void)
 	switch (fState)
 	{
 	case Fader::STATE::FADE_IN:
-		// 明転中
+		//  明転中
 		if (fader_->IsEnd())
 		{
-			// 明転が終了したら、フェード処理終了
+			//  明転が終了したら、フェード処理終了
 			fader_->SetFade(Fader::STATE::NONE);
 			isSceneChanging_ = false;
 		}
 		break;
 	case Fader::STATE::FADE_OUT:
-		// 暗転中
+		//  暗転中
 		if (fader_->IsEnd())
 		{
 			camera_->Release();
-			// 完全に暗転してからシーン遷移
+			//  完全に暗転してからシーン遷移
 			DoChangeScene(waitSceneId_);
 			camera_->Init();
-			// 暗転から明転へ
+			//  暗転から明転へ
 			fader_->SetFade(Fader::STATE::FADE_IN);
 		}
 		break;

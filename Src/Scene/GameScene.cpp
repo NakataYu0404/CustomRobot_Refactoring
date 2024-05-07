@@ -1,5 +1,6 @@
 #include "../Application.h"
 #include "../Utility/AsoUtility.h"
+#include "../Manager/ResourceManager.h"
 #include "../Manager/InputManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/Camera.h"
@@ -8,7 +9,7 @@
 #include "../Object/PlayerBase.h"
 #include "GameScene.h"
 
-GameScene::GameScene(void)
+GameScene::GameScene(void):resMng_(ResourceManager::GetInstance())
 {
 }
 
@@ -20,15 +21,14 @@ void GameScene::Init(void)
 {
 	stage_ = std::make_shared<Stage>();
 	stage_->Init();
-
-	// カメラをフリーモードにする
+	
+	//  カメラをフリーモードにする
 	SceneManager::GetInstance().GetCamera().lock()->ChangeMode(Camera::MODE::AUTO);
 	SceneManager::GetInstance().GetCamera().lock()->SetHAngle(0.0f);
-	// プレイヤーのモデル
+	//  プレイヤーのモデル
 	modelPlayerId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Birb.mv1").c_str());
 	modelPlayerId2_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Yeti.mv1").c_str());
-	// 1Playerの初期化
-	//players_[0] = new PlayerBase(modelPlayerId_);
+	//  1Playerの初期化
 	PlayerBase::KEY_CONFIG keyPl = {
 		InputManager::JOYPAD_BTN::LEFT,
 		InputManager::JOYPAD_BTN::DOWN,
@@ -39,23 +39,24 @@ void GameScene::Init(void)
 
 
 	};
-	// このプレイヤーInitに使っている武器タイプは、あとでセレクトシーンから持ってきた武器種変数に変える
+	//  CustomSceneのシェアードポインタを使ってるから、新しくmakeしない
 	players_[0]->Init(PlayerBase::TYPE::PLAYER_1, keyPl);
-	players_[0]->SetModelStageId(stage_->GetModelId());
-	players_[0]->SetModelCoverId(stage_->GetCoverModelId());
-	// 2Playerの初期化
-	//players_[1] = new PlayerBase(modelPlayerId2_);
 	players_[1]->Init(PlayerBase::TYPE::PLAYER_2, keyPl);
-	players_[1]->SetModelStageId(stage_->GetModelId());
-	players_[1]->SetModelCoverId(stage_->GetCoverModelId());
+	for (int i = 0; i < 2; i++)
+	{
+		players_[i]->SetModelStageId(stage_->GetModelId());
+		players_[i]->SetModelCoverId(stage_->GetCoverModelId());
+	}
 
-	// ゲームオーバー判定
+	//  ゲームオーバー判定
+	//  配列にするか悩んだけど、P1P2分けにした方が読みやすいと思った
 	p2win_ = false;
 	p1win_ = false;
 
-	// ゲームオーバー画像
-	imgP1Win_ = LoadGraph((Application::PATH_IMAGE + "p1Win.png").c_str());
-	imgP2Win_ = LoadGraph((Application::PATH_IMAGE + "p2Win.png").c_str());
+	//  ゲームオーバー画像
+	
+	imgP1Win_ = resMng_.Load(ResourceManager::SRC::IMG_1P_WIN).handleId_;
+	imgP2Win_ = resMng_.Load(ResourceManager::SRC::IMG_2P_WIN).handleId_;
 
 	shadowH = MakeShadowMap(2048, 2048);
 	SetShadowMapLightDirection(shadowH, VGet(0.0f, -1.0f, 0.0f));
@@ -74,45 +75,46 @@ void GameScene::Init(void)
 		hpOnes_[plNum] = hp;
 
 	}
-	NumImageH_[0][0] = LoadGraph((Application::PATH_IMAGE + "p1Num/" + "0.png").c_str());
-	NumImageH_[0][1] = LoadGraph((Application::PATH_IMAGE + "p1Num/" + "1.png").c_str());
-	NumImageH_[0][2] = LoadGraph((Application::PATH_IMAGE + "p1Num/" + "2.png").c_str());
-	NumImageH_[0][3] = LoadGraph((Application::PATH_IMAGE + "p1Num/" + "3.png").c_str());
-	NumImageH_[0][4] = LoadGraph((Application::PATH_IMAGE + "p1Num/" + "4.png").c_str());
-	NumImageH_[0][5] = LoadGraph((Application::PATH_IMAGE + "p1Num/" + "5.png").c_str());
-	NumImageH_[0][6] = LoadGraph((Application::PATH_IMAGE + "p1Num/" + "6.png").c_str());
-	NumImageH_[0][7] = LoadGraph((Application::PATH_IMAGE + "p1Num/" + "7.png").c_str());
-	NumImageH_[0][8] = LoadGraph((Application::PATH_IMAGE + "p1Num/" + "8.png").c_str());
-	NumImageH_[0][9] = LoadGraph((Application::PATH_IMAGE + "p1Num/" + "9.png").c_str());
 
-	NumImageH_[1][0] = LoadGraph((Application::PATH_IMAGE + "p2Num/" + "0.png").c_str());
-	NumImageH_[1][1] = LoadGraph((Application::PATH_IMAGE + "p2Num/" + "1.png").c_str());
-	NumImageH_[1][2] = LoadGraph((Application::PATH_IMAGE + "p2Num/" + "2.png").c_str());
-	NumImageH_[1][3] = LoadGraph((Application::PATH_IMAGE + "p2Num/" + "3.png").c_str());
-	NumImageH_[1][4] = LoadGraph((Application::PATH_IMAGE + "p2Num/" + "4.png").c_str());
-	NumImageH_[1][5] = LoadGraph((Application::PATH_IMAGE + "p2Num/" + "5.png").c_str());
-	NumImageH_[1][6] = LoadGraph((Application::PATH_IMAGE + "p2Num/" + "6.png").c_str());
-	NumImageH_[1][7] = LoadGraph((Application::PATH_IMAGE + "p2Num/" + "7.png").c_str());
-	NumImageH_[1][8] = LoadGraph((Application::PATH_IMAGE + "p2Num/" + "8.png").c_str());
-	NumImageH_[1][9] = LoadGraph((Application::PATH_IMAGE + "p2Num/" + "9.png").c_str());
+	NumImageH_[0][0] = resMng_.Load(ResourceManager::SRC::IMG_1P_NUM0).handleId_;
+	NumImageH_[0][1] = resMng_.Load(ResourceManager::SRC::IMG_1P_NUM1).handleId_;
+	NumImageH_[0][2] = resMng_.Load(ResourceManager::SRC::IMG_1P_NUM2).handleId_;
+	NumImageH_[0][3] = resMng_.Load(ResourceManager::SRC::IMG_1P_NUM3).handleId_;
+	NumImageH_[0][4] = resMng_.Load(ResourceManager::SRC::IMG_1P_NUM4).handleId_;
+	NumImageH_[0][5] = resMng_.Load(ResourceManager::SRC::IMG_1P_NUM5).handleId_;
+	NumImageH_[0][6] = resMng_.Load(ResourceManager::SRC::IMG_1P_NUM6).handleId_;
+	NumImageH_[0][7] = resMng_.Load(ResourceManager::SRC::IMG_1P_NUM7).handleId_;
+	NumImageH_[0][8] = resMng_.Load(ResourceManager::SRC::IMG_1P_NUM8).handleId_;
+	NumImageH_[0][9] = resMng_.Load(ResourceManager::SRC::IMG_1P_NUM9).handleId_;
 
-	HpBarImageH_[0] = LoadGraph((Application::PATH_IMAGE + "player1.png").c_str());
-	HpBarImageH_[1] = LoadGraph((Application::PATH_IMAGE + "player2.png").c_str());
-	HpScaleImageH_ = LoadGraph((Application::PATH_IMAGE + "Hpbar.png").c_str());
-	HpBarBlackImageH_ = LoadGraph((Application::PATH_IMAGE + "HpbarBlack.png").c_str());
+	NumImageH_[1][0] = resMng_.Load(ResourceManager::SRC::IMG_2P_NUM0).handleId_;
+	NumImageH_[1][1] = resMng_.Load(ResourceManager::SRC::IMG_2P_NUM1).handleId_;
+	NumImageH_[1][2] = resMng_.Load(ResourceManager::SRC::IMG_2P_NUM2).handleId_;
+	NumImageH_[1][3] = resMng_.Load(ResourceManager::SRC::IMG_2P_NUM3).handleId_;
+	NumImageH_[1][4] = resMng_.Load(ResourceManager::SRC::IMG_2P_NUM4).handleId_;
+	NumImageH_[1][5] = resMng_.Load(ResourceManager::SRC::IMG_2P_NUM5).handleId_;
+	NumImageH_[1][6] = resMng_.Load(ResourceManager::SRC::IMG_2P_NUM6).handleId_;
+	NumImageH_[1][7] = resMng_.Load(ResourceManager::SRC::IMG_2P_NUM7).handleId_;
+	NumImageH_[1][8] = resMng_.Load(ResourceManager::SRC::IMG_2P_NUM8).handleId_;
+	NumImageH_[1][9] = resMng_.Load(ResourceManager::SRC::IMG_2P_NUM9).handleId_;
+
+	HpBarImageH_[0] = resMng_.Load(ResourceManager::SRC::IMG_1P_HPBAR).handleId_;
+	HpBarImageH_[1] = resMng_.Load(ResourceManager::SRC::IMG_2P_HPBAR).handleId_;
+	HpScaleImageH_ = resMng_.Load(ResourceManager::SRC::IMG_HPSCALE).handleId_;
+	HpBarBlackImageH_ = resMng_.Load(ResourceManager::SRC::IMG_HPBLACK).handleId_;
 
 	soundBgmH_ = LoadSoundMem((Application::PATH_BGM + "Battle.mp3").c_str());
 	soundVicH_ = LoadSoundMem((Application::PATH_BGM + "Victory.mp3").c_str());
 
-	gameNumImgH_[0] = LoadGraph((Application::PATH_IMAGE + "Num/1.png").c_str());
-	gameNumImgH_[1] = LoadGraph((Application::PATH_IMAGE + "Num/2.png").c_str());
-	gameNumImgH_[2] = LoadGraph((Application::PATH_IMAGE + "Num/3.png").c_str());
-	gameNumImgH_[3] = LoadGraph((Application::PATH_IMAGE + "Num/4.png").c_str());
-	gameNumImgH_[4] = LoadGraph((Application::PATH_IMAGE + "Num/5.png").c_str());
+	gameNumImgH_[0] = resMng_.Load(ResourceManager::SRC::IMG_COUNTDOWN_NUM1).handleId_;
+	gameNumImgH_[1] = resMng_.Load(ResourceManager::SRC::IMG_COUNTDOWN_NUM2).handleId_;
+	gameNumImgH_[2] = resMng_.Load(ResourceManager::SRC::IMG_COUNTDOWN_NUM3).handleId_;
+	gameNumImgH_[3] = resMng_.Load(ResourceManager::SRC::IMG_COUNTDOWN_NUM4).handleId_;
+	gameNumImgH_[4] = resMng_.Load(ResourceManager::SRC::IMG_COUNTDOWN_NUM5).handleId_;
 
 	GameCountFlame_ = 240;
 	GameCount_ = 0;
-	startH_ = LoadGraph((Application::PATH_IMAGE + "start.png").c_str());
+	startH_ = resMng_.Load(ResourceManager::SRC::IMG_GAMESTART).handleId_;
 
 	initFlag_ = false;
 
@@ -134,7 +136,7 @@ void GameScene::Update(void)
 	if (p2win_ == true || p1win_ == true)
 	{
 		GameSet();
-		// ゲームオーバーになってたらここからは処理しない
+		//  ゲームオーバーになってたらここからは処理しない
 		return;
 	}
 
@@ -147,7 +149,7 @@ void GameScene::Update(void)
 
 	for (int i = 0; i < 2; i++)
 	{
-		// i番目のプレイヤーが生きていたら
+		//  i番目のプレイヤーが生きていたら
 		if (players_[i]->IsAlive() == true)
 		{
 			players_[i]->Update();
@@ -169,15 +171,15 @@ void GameScene::Update(void)
 
 	SceneManager::GetInstance().GetCamera().lock()->SetTargetPos(pl1Pos_, pl2Pos_);
 
-	// ステージモデルID
+	//  ステージモデルID
 	int modelStageId = stage_->GetModelId();
 
-	for (int p = 0; p < 2; p++)	// p = プレイヤー番号
+	for (int p = 0; p < 2; p++)	//  p = プレイヤー番号
 	{
 		switch (p)
 		{
 		case 0:
-			// 自分が無敵で相手が無敵じゃなかったら当たり判定に入る
+			//  自分が無敵で相手が無敵じゃなかったら当たり判定に入る
 			if ((players_[p]->GetInvincible() && !players_[p+1]->GetInvincible()) && !players_[p]->GetAlreadyAttack() && !(players_[p + 1]->GetRecovery()))
 			{
 				VECTOR pPos = players_[p]->GetPos();
@@ -197,7 +199,7 @@ void GameScene::Update(void)
 			}
 			break;
 		case 1:
-			// 同上
+			//  同上
 			if ((players_[p]->GetInvincible() && !players_[p-1]->GetInvincible()) && !players_[p]->GetAlreadyAttack() && !(players_[p-1]->GetRecovery()))
 			{
 				VECTOR pPos = players_[p]->GetPos();
@@ -221,7 +223,7 @@ void GameScene::Update(void)
 		}
 	}
 
-	for (int p = 0; p < 2; p++)	// p = プレイヤー番号
+	for (int p = 0; p < 2; p++)	//  p = プレイヤー番号
 	{
 
 		auto shots = players_[p]->GetShots();
@@ -231,15 +233,15 @@ void GameScene::Update(void)
 
 			if (shot->IsShot() == false)
 			{
-				// 爆発中や処理終了後は、以降の処理を実行しない
+				//  爆発中や処理終了後は、以降の処理を実行しない
 				continue;
 			}
 
-			// ステージモデルとの衝突判定
+			//  ステージモデルとの衝突判定
 			for (int i = 0; i <= 500; i++)
 			{
 				VECTOR tmpPos = shot->GetPos();
-				// 1フレームに移動したい距離の1/100移動させる
+				//  1フレームに移動したい距離の1/100移動させる
 				VECTOR movepow = shot->GetMovePow();
 				tmpPos = VAdd(tmpPos, VScale(VScale(movepow, 0.002), i));
 				auto info = MV1CollCheck_Sphere(modelStageId, -1, tmpPos, shot->GetRadius());
@@ -256,16 +258,16 @@ void GameScene::Update(void)
 				{
 					shot->SetPos(VAdd(shot->GetPos(), VScale(movepow, 0.002)));
 				}
-				// 当たり判定結果ポリゴン配列の後始末をする
+				//  当たり判定結果ポリゴン配列の後始末をする
 				MV1CollResultPolyDimTerminate(info);
 
 				switch (p)
 				{
 				case 0:
-					// i番目の人が生きていたら
+					//  i番目の人が生きていたら
 					if (players_[p + 1]->IsAlive() == true)
 					{
-						// モデルとの衝突判定（円と円）
+						//  モデルとの衝突判定（円と円）
 						if (AsoUtility::IsHitSpheres(shot->GetPos(), shot->GetRadius(), players_[p + 1]->GetColPos(), players_[p + 1]->GetRadius()) && shot->GetState()!=WeaponBase::STATE::BLAST)
 						{
 							shot->Blast();
@@ -277,10 +279,10 @@ void GameScene::Update(void)
 					}
 					break;
 				case 1:
-					// i番目の人が生きていたら
+					//  i番目の人が生きていたら
 					if (players_[p - 1]->IsAlive() == true)
 					{
-						// モデルとの衝突判定（円と円）
+						//  モデルとの衝突判定（円と円）
 						if (AsoUtility::IsHitSpheres(shot->GetPos(), shot->GetRadius(), players_[p - 1]->GetColPos(), players_[p - 1]->GetRadius()) && shot->GetState() != WeaponBase::STATE::BLAST)
 						{
 							shot->Blast();
@@ -306,27 +308,27 @@ void GameScene::Update(void)
 
 			if (bomb->IsShot() == false)
 			{
-				// 爆発中や処理終了後は、以降の処理を実行しない
+				//  爆発中や処理終了後は、以降の処理を実行しない
 				continue;
 			}
 
-			// ステージモデルとの衝突判定
+			//  ステージモデルとの衝突判定
 			auto info = MV1CollCheck_Sphere(modelStageId, -1, bomb->GetPos(), bomb->GetRadius());
 			if (info.HitNum > 0)
 			{
 				bomb->Blast();
 			}
-			// 当たり判定結果ポリゴン配列の後始末をする
+			//  当たり判定結果ポリゴン配列の後始末をする
 			MV1CollResultPolyDimTerminate(info);
 
 
 			switch (p)
 			{
 			case 0:
-				// i番目の人が生きていたら
+				//  i番目の人が生きていたら
 				if (players_[p + 1]->IsAlive() == true)
 				{
-					// モデルとの衝突判定（円と円）
+					//  モデルとの衝突判定（円と円）
 					if (AsoUtility::IsHitSpheres(bomb->GetPos(), bomb->GetRadius(), players_[p + 1]->GetColPos(), players_[p + 1]->GetRadius()))
 					{
 						bomb->Blast();
@@ -338,10 +340,10 @@ void GameScene::Update(void)
 				}
 				break;
 			case 1:
-				// i番目の人が生きていたら
+				//  i番目の人が生きていたら
 				if (players_[p - 1]->IsAlive() == true)
 				{
-					// モデルとの衝突判定（円と円）
+					//  モデルとの衝突判定（円と円）
 					if (AsoUtility::IsHitSpheres(bomb->GetPos(), bomb->GetRadius(), players_[p - 1]->GetColPos(), players_[p - 1]->GetRadius()))
 					{
 						bomb->Blast();
@@ -365,14 +367,14 @@ void GameScene::Update(void)
 
 			if (pod->IsShot() == false)
 			{
-				// 爆発中や処理終了後は、以降の処理を実行しない
+				//  爆発中や処理終了後は、以降の処理を実行しない
 				continue;
 			}
 
 
 
 
-			// ステージモデルとの衝突判定
+			//  ステージモデルとの衝突判定
 			auto info = MV1CollCheck_Sphere(modelStageId, -1, pod->GetPos(), pod->GetRadius());
 
 			if (info.HitNum > 0)
@@ -386,18 +388,18 @@ void GameScene::Update(void)
 					VECTOR hitPoliPos1 = hitDim.Position[1];
 					VECTOR hitPoliPos2 = hitDim.Position[2];
 
-					// 当たっていたら、当たらなくなるまで法線ベクトル方向に100回戻す
+					//  当たっていたら、当たらなくなるまで法線ベクトル方向に100回戻す
 					for (int a = 0; a < 100; a++)
 					{
-						// このループ内での当たり判定Pos
+						//  このループ内での当たり判定Pos
 						VECTOR tmpSpherePos = pod->GetPos();
 						float sphereRadius = 8.0f;
-						// 当たっていたら位置を少し戻す
+						//  当たっていたら位置を少し戻す
 						if (HitCheck_Sphere_Triangle(tmpSpherePos, sphereRadius, hitPoliPos0, hitPoliPos1, hitPoliPos2))
 						{
 							pod->SetPos(VAdd(tmpSpherePos, VScale(hitDim.Normal, 15.0f)));
 						}
-						// 当たっていなかったら処理を終了する
+						//  当たっていなかったら処理を終了する
 						else
 						{
 							break;
@@ -413,16 +415,16 @@ void GameScene::Update(void)
 
 
 			}
-			// 当たり判定結果ポリゴン配列の後始末をする
+			//  当たり判定結果ポリゴン配列の後始末をする
 			MV1CollResultPolyDimTerminate(info);
 
 			switch (p)
 			{
 			case 0:
-				// i番目の人が生きていたら
+				//  i番目の人が生きていたら
 				if (players_[p + 1]->IsAlive() == true)
 				{
-					// モデルとの衝突判定（円と円）
+					//  モデルとの衝突判定（円と円）
 					if (AsoUtility::IsHitSpheres(pod->GetPos(), pod->GetRadius(), players_[p + 1]->GetColPos(), players_[p + 1]->GetRadius()))
 					{
 						pod->PlayerHit(true);
@@ -435,10 +437,10 @@ void GameScene::Update(void)
 				}
 				break;
 			case 1:
-				// i番目の人が生きていたら
+				//  i番目の人が生きていたら
 				if (players_[p - 1]->IsAlive() == true)
 				{
-					// モデルとの衝突判定（円と円）
+					//  モデルとの衝突判定（円と円）
 					if (AsoUtility::IsHitSpheres(pod->GetPos(), pod->GetRadius(), players_[p - 1]->GetColPos(), players_[p - 1]->GetRadius()))
 					{
 						pod->PlayerHit(true);
@@ -466,7 +468,7 @@ void GameScene::Update(void)
 		}
 	}
 
-	// ゲームオーバー判定
+	//  ゲームオーバー判定
 	for (int i = 0; i < 2; i++)
 	{
 		if (players_[i]->IsAlive() == false)
@@ -502,12 +504,12 @@ void GameScene::Update(void)
 
 void GameScene::Draw(void)
 {
-	// シャドウマップへの描画の準備
+	//  シャドウマップへの描画の準備
 	ShadowMap_DrawSetup(shadowH);
-	// シャドウマップへモデルの描画
+	//  シャドウマップへモデルの描画
 	MV1DrawModel(pl1ModelId_);
 	MV1DrawModel(pl2ModelId_);
-	// シャドウマップへの描画を終了
+	//  シャドウマップへの描画を終了
 	ShadowMap_DrawEnd();
 
 
@@ -527,7 +529,7 @@ void GameScene::Draw(void)
 
 	for (int i = 0; i < 2; i++)
 	{
-		// i番目の敵が生きていたら
+		//  i番目の敵が生きていたら
 		if (players_[i]->IsAlive() == true)
 		{
 			players_[i]->Draw();
@@ -627,7 +629,7 @@ void GameScene::GameSet(void)
 		PlaySoundMem(soundVicH_, DX_PLAYTYPE_LOOP, true);
 	}
 
-	// シーン遷移
+	//  シーン遷移
 	InputManager& ins = InputManager::GetInstance();
 	if (ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD1, InputManager::JOYPAD_BTN::DOWN) || ins.IsPadBtnNew(InputManager::JOYPAD_NO::PAD2, InputManager::JOYPAD_BTN::DOWN))
 	{

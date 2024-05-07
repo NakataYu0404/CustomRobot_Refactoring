@@ -1,11 +1,14 @@
 #pragma once
+
+class ResourceManager;
+
 class Stage
 {
 public:
 
-	// コンストラクタ
+	//  コンストラクタ
 	Stage(void);
-	// デストラクタ
+	//  デストラクタ
 	~Stage(void);
 
 	void Init(void);
@@ -20,19 +23,20 @@ public:
 
 private:
 
-	// 3DモデルのハンドルID
+	//  3DモデルのハンドルID
 	int modelId_;
 	int coverModelId_;
 
 	int modelSkyId_;
 
-	// ステージ上に配置する飾り文字のID、当たり判定いらない
+	//  ステージ上に配置する飾り文字のID、当たり判定いらない
 	int charId_;
 
-	// 背景画像のハンドルID
+	//  背景画像のハンドルID
 	int imgBack_;
 
 	int shadowH;
 
+	ResourceManager& resMng_;
 };
 

@@ -22,7 +22,7 @@ ResourceManager& ResourceManager::GetInstance(void)
 void ResourceManager::Init(void)
 {
 
-	// 推奨しませんが、どうしても使いたい方は
+	//  推奨しませんが、どうしても使いたい方は
 	using RES = Resource;
 	using RES_T = RES::TYPE;
 	static std::string PATH_IMG = Application::PATH_IMAGE;
@@ -31,7 +31,7 @@ void ResourceManager::Init(void)
 
 	Resource* res;
 
-	// 画像
+	//  画像
 	res = new RES(RES_T::IMG, PATH_IMG + "Title.png");
 	resourcesMap_.emplace(SRC::IMG_TITLE, res);
 
@@ -158,6 +158,9 @@ void ResourceManager::Init(void)
 	res = new RES(RES_T::IMG, PATH_IMG + "smoke.png");
 	resourcesMap_.emplace(SRC::IMG_SMOKE, res);
 
+	res = new RES(RES_T::IMGS, PATH_IMG + "Blast.png");
+	resourcesMap_.emplace(SRC::IMG_BLAST, res);
+
 	res = new RES(RES_T::IMG, PATH_IMG + "Stun/1.png");
 	resourcesMap_.emplace(SRC::IMG_STUN_ANIM1, res);
 	res = new RES(RES_T::IMG, PATH_IMG + "Stun/2.png");
@@ -171,6 +174,9 @@ void ResourceManager::Init(void)
 	resourcesMap_.emplace(SRC::IMG_INSTRUCTION_BASE, res);
 	res = new RES(RES_T::IMG, PATH_IMG + "sousakougeki.png");
 	resourcesMap_.emplace(SRC::IMG_INSTRUCTION_ATTACK, res);
+
+	res = new RES(RES_T::IMG, PATH_IMG + "Box.png");
+	resourcesMap_.emplace(SRC::IMG_UIBOX, res);
 
 	res = new RES(RES_T::MODEL, PATH_MDL + "Stage/Sky.mv1");
 	resourcesMap_.emplace(SRC::MDL_SKYDOME, res);
@@ -259,25 +265,25 @@ ResourceManager::ResourceManager(void)
 Resource& ResourceManager::_Load(SRC src)
 {
 
-	// ロード済みチェック
+	//  ロード済みチェック
 	const auto& lPair = loadedMap_.find(src);
 	if (lPair != loadedMap_.end())
 	{
 		return *resourcesMap_.find(src)->second;
 	}
 
-	// リソース登録チェック
+	//  リソース登録チェック
 	const auto& rPair = resourcesMap_.find(src);
 	if (rPair == resourcesMap_.end())
 	{
-		// 登録されていない
+		//  登録されていない
 		return dummy_;
 	}
 
-	// ロード処理
+	//  ロード処理
 	rPair->second->Load();
 
-	// 念のためコピーコンストラクタ
+	//  念のためコピーコンストラクタ
 	loadedMap_.emplace(src, *rPair->second);
 
 	return *rPair->second;

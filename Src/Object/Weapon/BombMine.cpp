@@ -7,17 +7,17 @@
 
 void BombMine::SetParam(void)
 {
-	// 使用メモリ容量と読み込み時間削減のため
-	// モデルデータをいくつもメモリ上に存在させない
+	//  使用メモリ容量と読み込み時間削減のため
+	//  モデルデータをいくつもメモリ上に存在させない
 	modelId_ = MV1DuplicateModel(baseModelId_);
 
-	// 弾の大きさを設定
+	//  弾の大きさを設定
 	scl_ = { 0.8f,0.8f,0.8f };
 
-	// 弾の角度を設定
+	//  弾の角度を設定
 	rot_ = { 0.0f,0.0f,0.0f };
 
-	// 弾の速度
+	//  弾の速度
 	speed_ = 8.0f;
 
 	hpDamage_ = 75;
@@ -35,20 +35,20 @@ void BombMine::SetParam(void)
 
 void BombMine::UpdateWeapon(void)
 {
-	// ↓弾を移動させる
-	// 移動量の計算(方向*スピード)
+	//  ↓弾を移動させる
+	//  移動量の計算(方向*スピード)
 	VECTOR movePow = VScale(dir_, speed_);
-	// 移動距離を測る
+	//  移動距離を測る
 	moveDistance += sqrt((movePow.x * movePow.x) + (movePow.z * movePow.z));
 	if ((moveDistance >= (plEnDistance_ / 3.0f) + (fmodf(plEnDistance_, 3.0f))))
 	{
-		// 加速度的に重力を加える
+		//  加速度的に重力を加える
 		gravityPow_ += SceneManager::GRAVITY / SceneManager::DEFAULT_FPS;
 		pos_ = VAdd(pos_, VScale({ 0.0f,-1.0f,0.0f }, gravityPow_));
 
 	}
 
-	// 移動処理(座標+移動量) 落下を考えていない
+	//  移動処理(座標+移動量) 落下を考えていない
 	pos_ = VAdd(pos_, movePow);
 
 	if (pos_.y <= 0)
@@ -56,13 +56,13 @@ void BombMine::UpdateWeapon(void)
 		ChangeState(STATE::BLAST);
 	}
 
-	// 大きさの設定
+	//  大きさの設定
 	MV1SetScale(modelId_, scl_);
 
-	// 角度の設定
+	//  角度の設定
 	MV1SetRotationXYZ(modelId_, rot_);
 
-	// 位置の設定
+	//  位置の設定
 	MV1SetPosition(modelId_, pos_);
 
 }
@@ -78,31 +78,31 @@ void BombMine::UpdateBlast(void)
 	float sclUp = 0.05f;
 	if (blastCnt_ == 0)
 	{
-		// 特定の大きさ(10)まで段々でかくする
+		//  特定の大きさ(10)まで段々でかくする
 		scl_.x += sclUp;
 		scl_.y += sclUp;
 		scl_.z += sclUp;
 	}
-	// 演出の為に回転させる
+	//  演出の為に回転させる
 	rot_.y += 0.05f;
 
-	// 大きさの設定
+	//  大きさの設定
 	MV1SetScale(modelId_, scl_);
 
-	// 角度の設定
+	//  角度の設定
 	MV1SetRotationXYZ(modelId_, rot_);
 
-	// 位置の設定
+	//  位置の設定
 	MV1SetPosition(modelId_, pos_);
 
 	if (scl_.x > 15.0)
 	{
-		// 特定の大きさより大きくなったら、持続カウンタを回す
+		//  特定の大きさより大きくなったら、持続カウンタを回す
 		blastCnt_++;
 	}
 	if (blastCnt_ >= 80)
 	{
-		// 持続カウンタがいっぱいになったら消す
+		//  持続カウンタがいっぱいになったら消す
 		ChangeState(STATE::END);
 	}
 }

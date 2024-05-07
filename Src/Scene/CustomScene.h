@@ -16,7 +16,7 @@ class PlayerBirb;
 class PlayerYeti;
 class PlayerCactoro;
 class PlayerBemon;
-
+class ResourceManager;
 
 class CustomScene : public SceneBase
 {
@@ -47,10 +47,10 @@ public:
 	};
 
 
-	// コンストラクタ
+	//  コンストラクタ
 	CustomScene(void);
 
-	// デストラクタ
+	//  デストラクタ
 	~CustomScene(void);
 
 	void Init(void) override;
@@ -62,15 +62,15 @@ public:
 	std::weak_ptr<PlayerBase> GetPlayer(int plNum);
 
 private:
-	// 素体のリスト
+	//  素体のリスト
 	std::vector <std::string> body;
-	// ガンのリスト
+	//  ガンのリスト
 	std::vector <std::string> gun;
-	// ボムのリスト
+	//  ボムのリスト
 	std::vector <std::string> bomb;
-	// ポッドのリスト
+	//  ポッドのリスト
 	std::vector <std::string> pod;
-	// レッグのリスト
+	//  レッグのリスト
 	std::vector <std::string> reg;
 
 	//	セレクトウィンドウの最大、現在サイズ
@@ -82,30 +82,30 @@ private:
 	//	文字描画するとき用プレイヤーごとのカラーハンドル
 	int color_[2];
 
-	// 各パーツ選択スクリーン、プレイヤープレビュースクリーンをまとめるスクリーン　これをBACKに描画する
+	//  各パーツ選択スクリーン、プレイヤープレビュースクリーンをまとめるスクリーン　これをBACKに描画する
 	int FullScreenH;
-	// 各パーツ選択画面スクリーンハンドル
+	//  各パーツ選択画面スクリーンハンドル
 	int bodyScreenH[2];
 	int gunScreenH[2];
 	int bombScreenH[2];
 	int podScreenH[2];
 	int regScreenH[2];
 
-	// プレイヤープレビュー
+	//  プレイヤープレビュー
 	int PreviewScreenH[2];
-	// プレイヤーごとにまとめたスクリーン
+	//  プレイヤーごとにまとめたスクリーン
 	int plScreenH[2];
 
-	// プレイヤー、武器の説明をしてくれるスクリーン
+	//  プレイヤー、武器の説明をしてくれるスクリーン
 	int expoScreenH[2];
 
 	//	各スクリーンを作成する際に用いる隙間サイズ(行間とか)
 	int blank;
 
-	// キーコンフィグ
+	//  キーコンフィグ
 	PlayerBase::KEY_CONFIG keyPl;
 
-	// 画像、モデルハンドル達
+	//  画像、モデルハンドル達
 	int UIBoxH;
 	int arrowH[59];
 
@@ -146,17 +146,17 @@ private:
 	//	カスタム終了画像位置(移動するため必要)
 	VECTOR ImageEndPos_[2];
 
-	// 選択されているプレイヤーモデルのid
+	//  選択されているプレイヤーモデルのid
 	int modelPlayerId_[2];
 
 	//	カーソル操作の際に用いる、コントローラースティックの傾き、１フレ前の傾き
 	int ControllerTilt_[2];
 	int ControllerTiltOld_[2];
 
-	// 現在描画しているスクリーンのステート
+	//  現在描画しているスクリーンのステート
 	SelectState select_[2];
 
-	// カーソルのステート(決定ボタンが押された時、このステートにselect_がきてselect_のステートはcursor_に。)
+	//  カーソルのステート(決定ボタンが押された時、このステートにselect_がきてselect_のステートはcursor_に。)
 	SelectState cursor_[2];
 	SelectState cursorOld_[2];
 
@@ -188,7 +188,7 @@ private:
 
 	//	スクリーンの切り替え（現在スクリーンAと、パーツ選択画面選択の決定時にカーソルが乗ってたパーツ選択画面スクリーンBの切り替え）
 	void ChangeScreen(int player);
-	// それぞれカスタムが終了した時に、武器、体を設定する(このあとゲームシーンへ)
+	//  それぞれカスタムが終了した時に、武器、体を設定する(このあとゲームシーンへ)
 	void ChangeWeapon(int plNum);
 	void ChangeBody(int plNum);
 
@@ -208,6 +208,7 @@ private:
 	//	プレイヤー描画スクリーンの描画
 	void DrawPreviewScreen(int player);
 
-	// ウィンドウがだんだんでかくなーる
+	//  ウィンドウがだんだんでかくなーる
 	void WindowBeBig(int player, int maxSizeY);
+	ResourceManager& resMng_;
 };

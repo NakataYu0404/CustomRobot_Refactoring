@@ -3,6 +3,8 @@
 #include <memory>
 #include "SceneBase.h"
 #include "CustomScene.h"
+
+class ResourceManager;
 class Stage;
 class Cannon;
 class PlayerBase;
@@ -11,13 +13,13 @@ class GameScene : public SceneBase
 {
 public:
 
-	// ゲームオーバー地点衝突判定球の半径
+	//  ゲームオーバー地点衝突判定球の半径
 	static constexpr float OVER_COL_RADIUS = 35.0f;
 
-	// コンストラクタ
+	//  コンストラクタ
 	GameScene(void);
 
-	// デストラクタ
+	//  デストラクタ
 	~GameScene(void);
 
 	void Init(void) override;
@@ -33,18 +35,18 @@ private:
 	//	ステージポインタ(このクラスで作る)
 	std::shared_ptr<Stage> stage_;
 
-	// プレイヤーのid
+	//  プレイヤーのid
 	int modelPlayerId_;
 	int modelPlayerId2_;
 
 	//	プレイヤーポインタ(あるものを代入する)
 	std::shared_ptr<PlayerBase> players_[2];
 
-	// ゲームオーバー判定
+	//  ゲームオーバー判定
 	bool p2win_;
 	bool p1win_;
 
-	// ゲームオーバー画像
+	//  ゲームオーバー画像
 	int imgP1Win_;
 	int imgP2Win_;
 
@@ -64,7 +66,7 @@ private:
 	int hpTens_[2];
 	int hpOnes_[2];
 
-	// 0～9の番号画像ハンドル（HPに使う）
+	//  0～9の番号画像ハンドル（HPに使う）
 	int NumImageH_[2][10];
 
 	//	HP描画に使う画像ハンドル
@@ -90,7 +92,9 @@ private:
 	//	1ゲームループだけ特定の処理を無視するためのフラグ
 	bool initFlag_;
 
-	// 決着がついた後の処理(セッターじゃないよ！)
+	//  決着がついた後の処理(セッターじゃないよ！)
 	void GameSet(void);
+
+	ResourceManager& resMng_;
 };
 

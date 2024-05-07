@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "../Application.h"
 #include "../Utility/AsoUtility.h"
+#include "../Manager/ResourceManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/Camera.h"
 #include "../Manager/InputManager.h"
@@ -8,7 +9,7 @@
 #include "GameScene.h"
 #include "CustomScene.h"
 
-CustomScene::CustomScene(void)
+CustomScene::CustomScene(void):resMng_(ResourceManager::GetInstance())
 {
 }
 
@@ -20,38 +21,37 @@ void CustomScene::Init(void)
 {
 	blank = 40;
 
-	// あとから出てくるタイプのウィンドウのマックスサイズ
+	//  あとから出てくるタイプのウィンドウのマックスサイズ
 	windowMaxSizeSelect = { 480.0f,0.0f,0.0f };
 
-	modelBirbH_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Birb.mv1").c_str());
-	modelYetiH_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Yeti.mv1").c_str());
-	modelCactoroH_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Cactoro.mv1").c_str());
-	modelBemonH_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/BlueDemon.mv1").c_str());
-	modelGhostH_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Ghost.mv1").c_str());
+	modelBirbH_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_BIRB);
+	modelYetiH_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_YETI);
+	modelCactoroH_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_CACTORO);
+	modelBemonH_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_BEMON);
+	modelGhostH_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_GHOST);
 
-	imageBirbH_ = LoadGraph((Application::PATH_IMAGE + "Enemy/birb.png").c_str());
-	imageYetiH_ = LoadGraph((Application::PATH_IMAGE + "Enemy/yeti.png").c_str());
-	imageCactoroH_ = LoadGraph((Application::PATH_IMAGE + "Enemy/cactoro.png").c_str());
-	imageBemonH_ = LoadGraph((Application::PATH_IMAGE + "Enemy/bluedemon.png").c_str());
-	imageGhostH_ = LoadGraph((Application::PATH_IMAGE + "Enemy/ghost.png").c_str());
+	imageBirbH_ = resMng_.Load(ResourceManager::SRC::IMG_BIRB).handleId_;
+	imageYetiH_ = resMng_.Load(ResourceManager::SRC::IMG_YETI).handleId_;
+	imageCactoroH_ = resMng_.Load(ResourceManager::SRC::IMG_CACTORO).handleId_;
+	imageBemonH_ = resMng_.Load(ResourceManager::SRC::IMG_BEMON).handleId_;
+	imageGhostH_ = resMng_.Load(ResourceManager::SRC::IMG_GHOST).handleId_;
 
-	 imageMachineH_ = LoadGraph((Application::PATH_IMAGE + "Weapon/machine.png").c_str());
-	 imagePunchH_ = LoadGraph((Application::PATH_IMAGE + "Weapon/punch.png").c_str());
-	 imageSniperH_ = LoadGraph((Application::PATH_IMAGE + "Weapon/sniper.png").c_str());
-	 imageCannonH_ = LoadGraph((Application::PATH_IMAGE + "Weapon/cannon.png").c_str());
-	 imageDelayH_ = LoadGraph((Application::PATH_IMAGE + "Weapon/delay.png").c_str());
-	 imageBounceH_ = LoadGraph((Application::PATH_IMAGE + "Weapon/bounce.png").c_str());
-	 imageAirH_ = LoadGraph((Application::PATH_IMAGE + "Weapon/air.png").c_str());
-	 imageStickyH_ = LoadGraph((Application::PATH_IMAGE + "Weapon/sticky.png").c_str());
-	 imageAirdashH_ = LoadGraph((Application::PATH_IMAGE + "Weapon/airdash.png").c_str());
-	 imageHoverH_ = LoadGraph((Application::PATH_IMAGE + "Weapon/hover.png").c_str());
+	 imageMachineH_ = resMng_.Load(ResourceManager::SRC::IMG_MACHINE).handleId_;
+	 imagePunchH_ = resMng_.Load(ResourceManager::SRC::IMG_PUNCH).handleId_;
+	 imageSniperH_ = resMng_.Load(ResourceManager::SRC::IMG_SNIPER).handleId_;
+	 imageCannonH_ = resMng_.Load(ResourceManager::SRC::IMG_CANNON).handleId_;
+	 imageDelayH_ = resMng_.Load(ResourceManager::SRC::IMG_DELAY).handleId_;
+	 imageBounceH_ = resMng_.Load(ResourceManager::SRC::IMG_BOUNCE).handleId_;
+	 imageAirH_ = resMng_.Load(ResourceManager::SRC::IMG_AIR).handleId_;
+	 imageStickyH_ = resMng_.Load(ResourceManager::SRC::IMG_STICKY).handleId_;
+	 imageAirdashH_ = resMng_.Load(ResourceManager::SRC::IMG_AIRDASH).handleId_;
+	 imageHoverH_ = resMng_.Load(ResourceManager::SRC::IMG_HOVER).handleId_;
 
-	 imageReadyH_ = LoadGraph((Application::PATH_IMAGE + "ready.png").c_str());
+	 imageReadyH_ = resMng_.Load(ResourceManager::SRC::IMG_READY).handleId_;
 
-	for (int i = 0; i < 3; i++)
-	{
-		imageSelectH_[i] = LoadGraph((Application::PATH_IMAGE + "Select/select" + std::to_string(i + 1) + ".png").c_str());
-	}
+		imageSelectH_[0] = resMng_.Load(ResourceManager::SRC::IMG_SELECT_ANIM1).handleId_;
+		imageSelectH_[1] = resMng_.Load(ResourceManager::SRC::IMG_SELECT_ANIM2).handleId_;
+		imageSelectH_[2] = resMng_.Load(ResourceManager::SRC::IMG_SELECT_ANIM3).handleId_;
 
 	body.push_back("バーブ");
 	body.push_back("イエティ");
@@ -74,6 +74,21 @@ void CustomScene::Init(void)
 	reg.push_back("ホバーレッグ");
 
 	FullScreenH = MakeScreen(Application::GetInstance().SCREEN_SIZE_X, Application::GetInstance().SCREEN_SIZE_Y);
+
+	color_[0] = GetColor(255, 60, 20);
+	color_[1] = GetColor(20, 60, 255);
+
+	keyPl = {
+		InputManager::JOYPAD_BTN::LEFT,
+		InputManager::JOYPAD_BTN::DOWN,
+		InputManager::JOYPAD_BTN::R,
+		InputManager::JOYPAD_BTN::L,
+		InputManager::JOYPAD_BTN::ZR,
+		InputManager::JOYPAD_BTN::ZL,
+	};
+
+	selectImgCnt_ = 0;
+
 	for (int plNum = 0; plNum < 2; plNum++)
 	{
 		modelPlayerId_[plNum] = modelBirbH_;
@@ -90,29 +105,6 @@ void CustomScene::Init(void)
 		expoScreenH[plNum] = MakeScreen(600, 428);
 
 		plScreenH[plNum] = MakeScreen(Application::GetInstance().SCREEN_SIZE_X, Application::GetInstance().SCREEN_SIZE_Y / 2);
-	}
-
-	color_[0] = GetColor(255, 60, 20);
-	color_[1] = GetColor(20, 60, 255);
-
-
-	keyPl = {
-		InputManager::JOYPAD_BTN::LEFT,
-		InputManager::JOYPAD_BTN::DOWN,
-		InputManager::JOYPAD_BTN::R,
-		InputManager::JOYPAD_BTN::L,
-		InputManager::JOYPAD_BTN::ZR,
-		InputManager::JOYPAD_BTN::ZL,
-
-
-	};
-
-	selectImgCnt_ = 0;
-
-	for (int plNum = 0; plNum < 2; plNum++)
-	{
-		// プレイヤーのモデル
-		modelPlayerId_[plNum] = MV1LoadModel((Application::PATH_MODEL + "Enemy/Birb.mv1").c_str());
 
 		select_[plNum] = SelectState::NORMAL;
 		cursor_[plNum] = SelectState::BODY;
@@ -121,10 +113,10 @@ void CustomScene::Init(void)
 		finishFlag_[plNum] = false;
 		finishChangeFlag_[plNum] = false;
 
-		// 1Playerの初期化
+		//  1Playerの初期化
 		players_[plNum] = std::make_shared<PlayerBase>();
 
-		// 初期のパーツタイプ
+		//  初期のパーツタイプ
 		type_[0] = PlayerBase::TYPE::PLAYER_1;
 		type_[1] = PlayerBase::TYPE::PLAYER_2;
 		shotType_[plNum] = PlayerBase::SHOT_TYPE::MACHINE;
@@ -132,37 +124,39 @@ void CustomScene::Init(void)
 		podType_[plNum] = PlayerBase::POD_TYPE::BOUNCE;
 		regType_[plNum] = PlayerBase::REG_TYPE::AIRDASH;
 
+		//  初期のカーソルが指すタイプ
 		cursorShot_[plNum] = PlayerBase::SHOT_TYPE::MACHINE;
 		cursorBomb_[plNum] = PlayerBase::BOMB_TYPE::CANNON;
 		cursorPod_[plNum] = PlayerBase::POD_TYPE::BOUNCE;
 		cursorReg_[plNum] = PlayerBase::REG_TYPE::AIRDASH;
 
+		//  初期のプレイヤーが持つタイプ
 		players_[plNum]->ChangeBody(modelPlayerId_[plNum]);
-		players_[plNum]->ChangeShot(PlayerBase::SHOT_TYPE::MACHINE);
-		players_[plNum]->ChangeBomb(PlayerBase::BOMB_TYPE::CANNON);
-		players_[plNum]->ChangePod(PlayerBase::POD_TYPE::BOUNCE);
+		players_[plNum]->ChangeShot(shotType_[plNum]);
+		players_[plNum]->ChangeBomb(bombType_[plNum]);
+		players_[plNum]->ChangePod(podType_[plNum]);
 		players_[plNum]->Init(type_[plNum], keyPl);
 		ImageEndPos_[plNum] = { 0.0f,-Application::SCREEN_SIZE_Y / 2,0.0f };
 
 		bodyType_[plNum] = BODY_TYPE::Birb;
 	}
 
-	UIBoxH = LoadGraph((Application::PATH_IMAGE + "Box.png").c_str());
+	UIBoxH = resMng_.Load(ResourceManager::SRC::IMG_UIBOX).handleId_;
 	
 	for (int i = 0; i < 59; i++)
 	{
 		arrowH[i] = LoadGraph((Application::PATH_IMAGE + "Yarrow/" + "File" + std::to_string(i+1) + ".png").c_str());
 	}
 
-	plEndH_[0] = LoadGraph((Application::PATH_IMAGE + "P1customend.png").c_str());
-	plEndH_[1] = LoadGraph((Application::PATH_IMAGE + "P2customend.png").c_str());
+	plEndH_[0] = resMng_.Load(ResourceManager::SRC::IMG_1P_CUSTOMEND).handleId_;
+	plEndH_[1] = resMng_.Load(ResourceManager::SRC::IMG_2P_CUSTOMEND).handleId_;
 
 	arrowPos_[0] = { 430.0f,62.0f,0.0f };
 	arrowPos_[1] = { 430.0f,62.0f,0.0f };
 
 	arrowAnimCnt_ = 0;
 
-	// 16で普通のフォントサイズ
+	//  16で普通のフォントサイズ
 	fontH = CreateFontToHandle(NULL, 32, -1, -1);
 
 	soundBgmH_ = LoadSoundMem((Application::PATH_BGM + "Custom.mp3").c_str());
@@ -175,13 +169,13 @@ void CustomScene::Update(void)
 		PlaySoundMem(soundBgmH_, DX_PLAYTYPE_LOOP, true);
 	}
 
-	// Cursor_ステートをいまカーソルがある位置のステートに変える処理を作りたい
+	//  Cursor_ステートをいまカーソルがある位置のステートに変える処理を作りたい
 	Cursor();
 	for (int plNum = 0; plNum < 2; plNum++)
 	{
 		if (finishFlag_[plNum] == true)
 		{
-			// このプレイヤーのカスタムが終わってたらスクリーン変えしなくていいよ！
+			//  このプレイヤーのカスタムが終わってたらスクリーン変えしなくていいよ！
 			continue;
 		}
 		ChangeScreen(plNum);
@@ -192,9 +186,9 @@ void CustomScene::Update(void)
 		{
 			if (finishFlag_[plNum] == true && finishChangeFlag_[plNum] == false)
 			{
-				// もし、選択が終わってて、選択後の登録が終わってなかったら
-				// セレクトで使ったBaseを消して～
-				// 新しい選択された体を登録！
+				//  もし、選択が終わってて、選択後の登録が終わってなかったら
+				//  セレクトで使ったBaseを消して～
+				//  新しい選択された体を登録！
 				switch (bodyType_[plNum])
 				{
 				case CustomScene::BODY_TYPE::Birb:
@@ -215,7 +209,7 @@ void CustomScene::Update(void)
 				}
 				players_[plNum]->Init(type_[plNum], keyPl);
 
-			// 体と武器を変更し
+			//  体と武器を変更し
 			ChangeBody(plNum);
 			ChangeWeapon(plNum);
 			finishChangeFlag_[plNum] = true;
@@ -224,7 +218,7 @@ void CustomScene::Update(void)
 		}
 		if (finishFlag_[0] == true && finishFlag_[1] == true)
 		{
-			// ゲームシーンへ！
+			//  ゲームシーンへ！
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 		}
 	}
@@ -375,7 +369,7 @@ std::weak_ptr<PlayerBase> CustomScene::GetPlayer(int plNum)
 	return players_[plNum];
 }
 
-// 変更を決定した時に、プレイャーの武器を変更する処理
+//  変更を決定した時に、プレイャーの武器を変更する処理
 void CustomScene::ChangeWeapon(int plNum)
 {
 	players_[plNum]->ChangeShot(shotType_[plNum]);
@@ -455,7 +449,7 @@ void CustomScene::Cursor(void)
 			continue;
 		}
 
-		// カーソル移動,タイプ変更と、カーソルのY位置決め
+		//  カーソル移動,タイプ変更と、カーソルのY位置決め
 		switch (select_[plNum])
 		{
 		case CustomScene::SelectState::NORMAL:
@@ -741,7 +735,7 @@ void CustomScene::Cursor(void)
 		case CustomScene::SelectState::FINISH:
 			break;
 		}
-		// カーソルのX位置決め
+		//  カーソルのX位置決め
 		if (select_[plNum] == SelectState::NORMAL || select_[plNum] == SelectState::FINISH)
 		{
 			arrowPos_[plNum].x = 430.0f;
@@ -755,7 +749,7 @@ void CustomScene::Cursor(void)
 	}
 }
 
-// 各種ウィンドウのDraw(関数がそれぞれ最後にでっかいキャンパスに自分を描画してる)
+//  各種ウィンドウのDraw(関数がそれぞれ最後にでっかいキャンパスに自分を描画してる)
 void CustomScene::DrawBodyScreen(int player)
 {
 	int screenH;
@@ -1067,8 +1061,8 @@ void CustomScene::DrawExpoScreen(int player)
 void CustomScene::DrawPreviewScreen(int player)
 {
 	SetDrawScreen(PreviewScreenH[player]);
-	// カメラをフリーモードにする
-	// カメラ設定
+	//  カメラをフリーモードにする
+	//  カメラ設定
 	SceneManager::GetInstance().Init3D();
 	SceneManager::GetInstance().GetCamera().lock()->SetBeforeDraw();
 	SceneManager::GetInstance().GetCamera().lock()->ChangeMode(Camera::MODE::FIXED_POINT);

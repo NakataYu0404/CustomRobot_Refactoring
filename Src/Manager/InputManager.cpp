@@ -24,8 +24,8 @@ InputManager& InputManager::GetInstance(void)
 void InputManager::Init(void)
 {
 
-	// ゲームで使用したいキーを、
-	// 事前にここで登録しておいてください
+	//  ゲームで使用したいキーを、
+	//  事前にここで登録しておいてください
 	InputManager::GetInstance().Add(KEY_INPUT_SPACE);
 	InputManager::GetInstance().Add(KEY_INPUT_N);
 	InputManager::GetInstance().Add(KEY_INPUT_Z);
@@ -54,7 +54,7 @@ void InputManager::Init(void)
 
 	InputManager::MouseInfo info;
 
-	// 左クリック
+	//  左クリック
 	info = InputManager::MouseInfo();
 	info.key = MOUSE_INPUT_LEFT;
 	info.keyOld = false;
@@ -63,7 +63,7 @@ void InputManager::Init(void)
 	info.keyTrgUp = false;
 	mouseInfos_.emplace(info.key, info);
 
-	// 右クリック
+	//  右クリック
 	info = InputManager::MouseInfo();
 	info.key = MOUSE_INPUT_RIGHT;
 	info.keyOld = false;
@@ -77,7 +77,7 @@ void InputManager::Init(void)
 void InputManager::Update(void)
 {
 
-	// キーボード検知
+	//  キーボード検知
 	for (auto& p : keyInfos_)
 	{
 		p.second.keyOld = p.second.keyNew;
@@ -86,7 +86,7 @@ void InputManager::Update(void)
 		p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
 	}
 
-	// マウス検知
+	//  マウス検知
 	mouseInput_ = GetMouseInput();
 	GetMousePoint(&mousePos_.x, &mousePos_.y);
 
@@ -98,7 +98,7 @@ void InputManager::Update(void)
 		p.second.keyTrgUp = !p.second.keyNew && p.second.keyOld;
 	}
 
-	// パッド情報
+	//  パッド情報
 	SetJPadInState(JOYPAD_NO::KEY_PAD1);
 	SetJPadInState(JOYPAD_NO::PAD1);
 	SetJPadInState(JOYPAD_NO::PAD2);
@@ -213,14 +213,14 @@ InputManager::JOYPAD_TYPE InputManager::GetJPadType(JOYPAD_NO no)
 
 DINPUT_JOYSTATE InputManager::GetJPadDInputState(JOYPAD_NO no)
 {
-	// コントローラ情報
+	//  コントローラ情報
 	GetJoypadDirectInputState(static_cast<int>(no), &joyDInState_);
 	return joyDInState_;
 }
 
 XINPUT_STATE InputManager::GetJPadXInputState(JOYPAD_NO no)
 {
-	// コントローラ情報
+	//  コントローラ情報
 	GetJoypadXInputState(static_cast<int>(no), &joyXInState_);
 	return joyXInState_;
 }
@@ -279,41 +279,41 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 
 		int idx;
 
-		//   Y
-		// X   B
-		//   A
+		//    Y
+		//  X   B
+		//    A
 
 		idx = static_cast<int>(JOYPAD_BTN::TOP);
-		ret.ButtonsNew[idx] = d.Buttons[3];// Y
+		ret.ButtonsNew[idx] = d.Buttons[3];//  Y
 
 		idx = static_cast<int>(JOYPAD_BTN::LEFT);
-		ret.ButtonsNew[idx] = d.Buttons[2];// X
+		ret.ButtonsNew[idx] = d.Buttons[2];//  X
 
 		idx = static_cast<int>(JOYPAD_BTN::RIGHT);
-		ret.ButtonsNew[idx] = d.Buttons[1];// B
+		ret.ButtonsNew[idx] = d.Buttons[1];//  B
 
 		idx = static_cast<int>(JOYPAD_BTN::DOWN);
-		ret.ButtonsNew[idx] = d.Buttons[0];// A
+		ret.ButtonsNew[idx] = d.Buttons[0];//  A
 
 		idx = static_cast<int>(JOYPAD_BTN::R);
-		ret.ButtonsNew[idx] = d.Buttons[4];// R
+		ret.ButtonsNew[idx] = d.Buttons[4];//  R
 
 		idx = static_cast<int>(JOYPAD_BTN::L);
-		ret.ButtonsNew[idx] = d.Buttons[5]; // L
+		ret.ButtonsNew[idx] = d.Buttons[5]; //  L
 
 		idx = static_cast<int>(JOYPAD_BTN::ZR);
-		ret.ButtonsNew[idx] = x.RightTrigger;// ZR
+		ret.ButtonsNew[idx] = x.RightTrigger;//  ZR
 
 		idx = static_cast<int>(JOYPAD_BTN::ZL);
-		ret.ButtonsNew[idx] = x.LeftTrigger; // ZL
+		ret.ButtonsNew[idx] = x.LeftTrigger; //  ZL
 
 
 
-		// 左スティック(1000段階の数値を/100して10段階の入力受付に)
+		//  左スティック(1000段階の数値を/100して10段階の入力受付に)
 		ret.AKeyLX = d.X / 100;
 		ret.AKeyLY = d.Y / 100;
 		
-		// 右スティック
+		//  右スティック
 		ret.AKeyRX = d.Rx / 10;
 		ret.AKeyRY = d.Ry / 10;
 
@@ -327,27 +327,27 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 		auto d = GetJPadDInputState(no);
 		int idx;
 
-		//   △
-		// □  〇
-		//   ×
+		//    △
+		//  □  〇
+		//    ×
 
 		idx = static_cast<int>(JOYPAD_BTN::TOP);
-		ret.ButtonsNew[idx] = d.Buttons[3];// △
+		ret.ButtonsNew[idx] = d.Buttons[3];//  △
 
 		idx = static_cast<int>(JOYPAD_BTN::LEFT);
-		ret.ButtonsNew[idx] = d.Buttons[0];// □
+		ret.ButtonsNew[idx] = d.Buttons[0];//  □
 
 		idx = static_cast<int>(JOYPAD_BTN::RIGHT);
-		ret.ButtonsNew[idx] = d.Buttons[2];// 〇
+		ret.ButtonsNew[idx] = d.Buttons[2];//  〇
 
 		idx = static_cast<int>(JOYPAD_BTN::DOWN);
-		ret.ButtonsNew[idx] = d.Buttons[1];// ×
+		ret.ButtonsNew[idx] = d.Buttons[1];//  ×
 
-		// 左スティック
+		//  左スティック
 		ret.AKeyLX = d.X;
 		ret.AKeyLY = d.Y;
 		
-		// 右スティック
+		//  右スティック
 		ret.AKeyRX = d.Z;
 		ret.AKeyRY = d.Rz;
 

@@ -4,8 +4,8 @@
 class BombCannon : public WeaponBase
 {
 public:
-	// 特にない
-	// パラメータ
+	//  特にない
+	//  パラメータ
 	void SetParam(void) override;
 
 	void UpdateWeapon(void) override;
@@ -20,7 +20,7 @@ protected:
 	bool IsShot(void) override;
 
 private:
-	// このブキ固有の処理が発生する場合はここ
+	//  このブキ固有の処理が発生する場合はここ
 	bool dirFlag;
 	float moveDistance;
 

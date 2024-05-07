@@ -12,15 +12,15 @@ Camera::~Camera()
 
 void Camera::Init(void)
 {
-	// カメラの位置
+	//  カメラの位置
 	pos_ = { 0.0f,540.0f,-690.0f };
 	
-	// カメラの角度
+	//  カメラの角度
 	angles_ = { 40.0f * DX_PI_F / 180.0f,0.0f,0.0f };
 
 	light2_ = CreatePointLightHandle(pos_,80000.0f,0.0f,0.0015f,0.0f);
 
-	// カメラの向きを初期化
+	//  カメラの向きを初期化
 	cameraHAngle_ = 360.0f;
 	cameraVAngle_ = 40.0f;
 
@@ -37,7 +37,7 @@ void Camera::Update(void)
 
 void Camera::SetBeforeDraw(void)
 {
-	// クリップ距離を設定する(SetDrawScreenでリセットが入る)
+	//  クリップ距離を設定する(SetDrawScreenでリセットが入る)
 	SetCameraNearFar(10.0f, 30000.0f);
 
 	switch (mode_)
@@ -73,7 +73,7 @@ void Camera::SetBeforeDrawFree(void)
 {
 	auto& ins = InputManager::GetInstance();
 
-	// WASDでカメラの位置を変える
+	//  WASDでカメラの位置を変える
 	float movePow = 3.0f;
 	if (ins.IsNew(KEY_INPUT_W)) { pos_.z += movePow; }
 	if (ins.IsNew(KEY_INPUT_A)) { pos_.x -= movePow; }
@@ -82,7 +82,7 @@ void Camera::SetBeforeDrawFree(void)
 	if (ins.IsNew(KEY_INPUT_Q)) { pos_.y += movePow; }
 	if (ins.IsNew(KEY_INPUT_E)) { pos_.y -= movePow; }
 
-	// 矢印キーでカメラの角度を変える
+	//  矢印キーでカメラの角度を変える
 	float rotPow = 1.0f * DX_PI_F / 180.0f;
 
 	if (ins.IsNew(KEY_INPUT_I))	 { angles_.x -= rotPow; }
@@ -104,9 +104,9 @@ void Camera::SetBeforeDrawAuto(void)
 		VECTOR tempPos;
 		VECTOR tempPos2;
 
-		// カメラの位置はカメラの水平角度と垂直角度から算出
+		//  カメラの位置はカメラの水平角度と垂直角度から算出
 
-		// 最初に垂直角度を反映した位置を算出
+		//  最初に垂直角度を反映した位置を算出
 		sinParam_ = sin(cameraVAngle_ / 180.0f * DX_PI_F);
 		cosParam_ = cos(cameraVAngle_ / 180.0f * DX_PI_F);
 		tempPos.x = 0.0f;
@@ -130,17 +130,17 @@ void Camera::SetBeforeDrawAuto(void)
 
 		tempPos.z = -cosParam_ * plDisLen;
 
-		// 次に水平角度を反映した位置を算出
+		//  次に水平角度を反映した位置を算出
 		sinParam_ = sin(cameraHAngle_ / 180.0f * DX_PI_F);
 		cosParam_ = cos(cameraHAngle_ / 180.0f * DX_PI_F);
 		tempPos2.x = cosParam_ * tempPos.x - sinParam_ * tempPos.z;
 		tempPos2.y = tempPos.y + plDistance_.y;
 		tempPos2.z = sinParam_ * tempPos.x + cosParam_ * tempPos.z;
 
-		// 算出した座標に注視点の位置を加算したものがカメラの位置
+		//  算出した座標に注視点の位置を加算したものがカメラの位置
 		pos_ = VAdd(tempPos2, targetPos_);
 
-		// カメラの設定に反映する
+		//  カメラの設定に反映する
 		SetCameraPositionAndTarget_UpVecY(pos_, targetPos_);
 	
 }
@@ -156,7 +156,7 @@ void Camera::ChangeMode(MODE mode)
 {
 	mode_ = mode;
 
-	// 変更時の初期化処理
+	//  変更時の初期化処理
 	switch (mode_)
 	{
 	case Camera::MODE::FIXED_POINT:
@@ -243,7 +243,7 @@ void Camera::SetTargetPos(VECTOR plPos1, VECTOR plPos2)
 		targetPos_.z = plDistance_.z / 2 + plPos1.z;
 	}
 
-	// 地面より少し下を注視点に設定したい
+	//  地面より少し下を注視点に設定したい
 	targetPos_.y -= 100;
 
 	plDisLen = sqrt(plDistance_.x * plDistance_.x + plDistance_.y * plDistance_.y + plDistance_.z * plDistance_.z);

@@ -3,11 +3,11 @@
 class PodSticky : public WeaponBase
 {
 public:
-	// 特にない
-	// パラメータ
+	//  特にない
+	//  パラメータ
 	void SetParam(void) override;
 
-	// 処理
+	//  処理
 	void UpdateWeapon(void) override;
 	void UpdateBlast(void) override;
 
@@ -17,7 +17,7 @@ public:
 
 protected:
 private:
-	// このブキ固有の処理が発生する場合はここ
+	//  このブキ固有の処理が発生する場合はここ
 	bool stickFlag_;
 };
 

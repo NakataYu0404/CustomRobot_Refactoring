@@ -5,10 +5,10 @@ class WeaponBase
 {
 public:
 
-	// 衝突判定用の球体半径
+	//  衝突判定用の球体半径
 	static constexpr float COL_RADIUS = 8.0f;
 
-	// 弾の状態
+	//  弾の状態
 	enum class STATE
 	{
 		NONE,
@@ -17,96 +17,98 @@ public:
 		END
 	};
 
-	// コンストラクタ
+	//  コンストラクタ
 	WeaponBase(void);
 
-	// デストラクタ
+	//  デストラクタ
 	virtual ~WeaponBase(void);
 
-	// 弾の生成 Init込み
+	//  弾の生成 Init込み
 	void CreateWeapon(VECTOR pos, VECTOR dir,int plNum);
 
-	void Init(int baseModelId, int* blastImgs, int blastAnimNum);
+	void Init(void);
 
-	// 更新ステップ
+	//	弾を新規生成(空いた配列にではなく、作ったとき)に情報Set
+	void SetInitial(int baseModelId, int* blastImgs, int blastAnimNum);
+	//  更新ステップ
 	void Update(void);
 
-	// 描画
+	//  描画
 	void Draw(void);
 
-	// 解放処理
+	//  解放処理
 	virtual void Release(void);
 
-	// 弾判定
+	//  弾判定
 	virtual bool IsShot(void);
 
-	// 生存判定
+	//  生存判定
 	bool IsAlive(void);
 
-	// 爆発処理
+	//  爆発処理
 	void Blast(void);
 	void End(void);
 
-	// ゲッター
-	// 位置
+	//  ゲッター
+	//  位置
 	VECTOR GetPos(void);
-	// 移動方向*1フレームの移動距離
+	//  移動方向*1フレームの移動距離
 	VECTOR GetMovePow(void);
-	// ステータス
+	//  ステータス
 	STATE GetState(void);
-	// 与ダメージ
+	//  与ダメージ
 	int GetHpDamage(void);
 	int GetStunDamage(void);
-	// 弾の半径(当たる判定に)
+	//  弾の半径(当たる判定に)
 	virtual float GetRadius(void);
-	// 方向
+	//  方向
 	VECTOR GetDir(void);
 
-	// セッター
-	// 位置
+	//  セッター
+	//  位置
 	void SetPos(VECTOR pos);
-	// 敵との距離
+	//  敵との距離
 	void SetDistance(float distance);
-	// 敵の位置
+	//  敵の位置
 	void SetEnemyPos(VECTOR pos);
-	// 当たった地形の法線ベクトル
+	//  当たった地形の法線ベクトル
 	void SetNormal(VECTOR normal);
-	// プレイヤーに当たったかを設定
+	//  プレイヤーに当たったかを設定
 	void PlayerHit(bool isHit);
-	// 角度
+	//  角度
 	void SetRot(VECTOR rot);
 
 	void SetColor(int plNum);
 protected:
 
-	// 弾の大きさ
+	//  弾の大きさ
 	VECTOR scl_;
 
-	// 弾の移動速度
+	//  弾の移動速度
 	float speed_;
 
 	float gravityPow_;
 
-	// 弾の状態
+	//  弾の状態
 	STATE state_;
 
-	// 元となる弾のモデルID
+	//  元となる弾のモデルID
 	int baseModelId_;
 
-	// 弾のモデルID
+	//  弾のモデルID
 	int modelId_;
 
-	// 方向
+	//  方向
 	VECTOR dir_;
 
-	// 弾の角度
+	//  弾の角度
 	VECTOR rot_;
 
-	// 弾の座標
+	//  弾の座標
 	VECTOR pos_;
 	VECTOR movePow_;
 
-	// 発射時点の座標
+	//  発射時点の座標
 	VECTOR posFire_;
 
 	VECTOR enemyPos_;
@@ -114,22 +116,22 @@ protected:
 	int hpDamage_;
 	int stunDamage_;
 
-	// 爆発アニメーション画像配列のポインタ
+	//  爆発アニメーション画像配列のポインタ
 	int* blastImgs_;
 
-	// 爆発アニメーション数
+	//  爆発アニメーション数
 	int blastAnimNum_;
 
-	// 爆発のアニメーション用カウンタ
+	//  爆発のアニメーション用カウンタ
 	int blastCntAnim_;
 
-	// 爆発のアニメーション番号
+	//  爆発のアニメーション番号
 	int blastIdxAnim_;
 
-	// 爆発のアニメーション速度
+	//  爆発のアニメーション速度
 	float blastSpeedAnim_;
 
-	// 何にも当たらずに飛び続けたときの限界フレーム
+	//  何にも当たらずに飛び続けたときの限界フレーム
 	int ShotBlastMax_;
 	int ShotBlastCnt_;
 
@@ -150,7 +152,7 @@ protected:
 	virtual void DrawBlast(void);
 	void DrawEnd(void);
 
-	// 状態遷移
+	//  状態遷移
 	void ChangeState(STATE state);
 
 	COLOR_F weaponColor_[2];
