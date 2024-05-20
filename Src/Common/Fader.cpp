@@ -2,7 +2,12 @@
 #include <time.h>
 #include <random>
 #include "../Application.h"
+#include "../Manager/ResourceManager.h"
 #include "Fader.h"
+
+Fader::Fader(void) : resMng_(ResourceManager::GetInstance())
+{
+}
 
 Fader::STATE Fader::GetState(void) const
 {
@@ -31,8 +36,8 @@ void Fader::Init(void)
 	isPreEnd_ = true;
 	isEnd_ = true;
 
-	imgSousakiH_ = LoadGraph("./Data/Image/sousakihon.png");
-	imgSousakoH_ = LoadGraph("./Data/Image/sousakougeki.png");
+	imgSousakiH_ = resMng_.Load(ResourceManager::SRC::IMG_INSTRUCTION_BASE).handleId_;
+	imgSousakoH_ = resMng_.Load(ResourceManager::SRC::IMG_INSTRUCTION_ATTACK).handleId_;
 
 	rand_ = 0;
 	random_ = false;

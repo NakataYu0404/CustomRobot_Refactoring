@@ -2,6 +2,7 @@
 #include "../../Application.h"
 #include "../../Utility/AsoUtility.h"
 #include "../../Manager/SceneManager.h"
+#include "../../Manager/ResourceManager.h"
 #include "BombCannon.h"
 
 
@@ -32,11 +33,11 @@ void BombCannon::SetParam(void)
 	ShotBlastMax_ = 600;
 	blastCnt_ = 0;
 
-	crossHairId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Crosshair.mv1").c_str());
+	crossHairId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_CROSSHAIR);
 	crosshairPos_ = enemyPos_;
 	crosshairScl_ = { 0.8f,0.8f,0.8f };
 	crosshairRot_ = { 0.0f,0.0f,0.0f };
-
+	
 	crosshairFlag_ = false;
 }
 

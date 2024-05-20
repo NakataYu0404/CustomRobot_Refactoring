@@ -26,8 +26,8 @@ void GameScene::Init(void)
 	SceneManager::GetInstance().GetCamera().lock()->ChangeMode(Camera::MODE::AUTO);
 	SceneManager::GetInstance().GetCamera().lock()->SetHAngle(0.0f);
 	//  プレイヤーのモデル
-	modelPlayerId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Birb.mv1").c_str());
-	modelPlayerId2_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Yeti.mv1").c_str());
+	modelPlayerId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_BIRB);
+	modelPlayerId2_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_YETI);
 	//  1Playerの初期化
 	PlayerBase::KEY_CONFIG keyPl = {
 		InputManager::JOYPAD_BTN::LEFT,
@@ -36,8 +36,6 @@ void GameScene::Init(void)
 		InputManager::JOYPAD_BTN::L,
 		InputManager::JOYPAD_BTN::ZR,
 		InputManager::JOYPAD_BTN::ZL,
-
-
 	};
 	//  CustomSceneのシェアードポインタを使ってるから、新しくmakeしない
 	players_[0]->Init(PlayerBase::TYPE::PLAYER_1, keyPl);

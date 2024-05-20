@@ -1,7 +1,8 @@
 #include "../../Manager/SceneManager.h"
+#include "../../Manager/ResourceManager.h"
 #include "WeaponBase.h"
 
-WeaponBase::WeaponBase(void)
+WeaponBase::WeaponBase(void) : resMng_(ResourceManager::GetInstance())
 {
 }
 

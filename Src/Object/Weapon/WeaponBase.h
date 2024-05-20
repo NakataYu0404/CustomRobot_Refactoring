@@ -1,6 +1,8 @@
 #pragma once
 #include <DxLib.h>
 
+class ResourceManager;
+
 class WeaponBase
 {
 public:
@@ -158,7 +160,10 @@ protected:
 	COLOR_F weaponColor_[2];
 
 	int plNum_;
+
+	ResourceManager& resMng_;
 private:
+
 
 };
 

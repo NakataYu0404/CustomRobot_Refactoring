@@ -158,7 +158,7 @@ void ResourceManager::Init(void)
 	res = new RES(RES_T::IMG, PATH_IMG + "smoke.png");
 	resourcesMap_.emplace(SRC::IMG_SMOKE, res);
 
-	res = new RES(RES_T::IMGS, PATH_IMG + "Blast.png");
+	res = new RES(RES_T::IMGS, PATH_IMG + "Blast.png",4,4,32,32);
 	resourcesMap_.emplace(SRC::IMG_BLAST, res);
 
 	res = new RES(RES_T::IMG, PATH_IMG + "Stun/1.png");

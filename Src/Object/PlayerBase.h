@@ -8,6 +8,7 @@
 
 class GameScene;
 class WeaponBase;
+class ResourceManager;
 
 class PlayerBase
 {
@@ -527,6 +528,8 @@ protected:
 	void ShotUpdate(void);
 
 	void SoundPlayer(SE_TYPE type);
+
+	ResourceManager& resMng_;
 
 private:
 

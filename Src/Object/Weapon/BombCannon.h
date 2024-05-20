@@ -32,5 +32,6 @@ private:
 	VECTOR crosshairPos_;
 	VECTOR crosshairScl_;
 	VECTOR crosshairRot_;
+
 };
 

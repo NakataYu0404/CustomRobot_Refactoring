@@ -2,6 +2,7 @@
 #include "../Application.h"
 #include "../Utility/AsoUtility.h"
 #include "../Manager/SceneManager.h"
+#include "../Manager/ResourceManager.h"
 
 //  ブキ
 #include "Weapon/WeaponBase.h"
@@ -18,7 +19,7 @@
 
 //   //タブ
 //  //スペース
-PlayerBase::PlayerBase(void)
+PlayerBase::PlayerBase(void) :resMng_(ResourceManager::GetInstance())
 {
 }
 
@@ -32,18 +33,20 @@ void PlayerBase::Init(TYPE type, KEY_CONFIG keyConfig)
     playerNumber_ = type;
     keyConfig_ = keyConfig;
 
-        
     shotFlameCnt_ = 0;
     podFlameCnt_ = 0;
 
-
     //  爆発エフェクト読み込み  
-    LoadDivGraph((Application::PATH_IMAGE + "Blast.png").c_str(), BLAST_ANIM_NUM, 4, 4, BLAST_SIZE_X, BLAST_SIZE_Y, blastImgs_, true);
-    for (int i = 0; i < 4; i++)
+    for(int i = 0; i < 16; i++)
     {
-        stunImgs_[i] = LoadGraph((Application::PATH_IMAGE + "Stun/" + std::to_string(i + 1) + ".png").c_str());
+        blastImgs_[i] = resMng_.Load(ResourceManager::SRC::IMG_BLAST).handleIds_[i];
     }
 
+    int i = 0;
+    stunImgs_[i++] = resMng_.Load(ResourceManager::SRC::IMG_STUN_ANIM1).handleId_;
+    stunImgs_[i++] = resMng_.Load(ResourceManager::SRC::IMG_STUN_ANIM2).handleId_;
+    stunImgs_[i++] = resMng_.Load(ResourceManager::SRC::IMG_STUN_ANIM3).handleId_;
+    stunImgs_[i] = resMng_.Load(ResourceManager::SRC::IMG_STUN_ANIM4).handleId_;
 
     SetCommon();
     SetParam();
@@ -85,22 +88,22 @@ void PlayerBase::ChangeShot(SHOT_TYPE shotType)
     switch (shotType)
     {
     case PlayerBase::SHOT_TYPE::MACHINE:
-        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
+        modelShotId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SHOT);
         shotBullet_ = bullets.S_MACHINE;
         delayShot_ = weaponDelay.S_MACHINE;
         break;
     case PlayerBase::SHOT_TYPE::ELECSHOCK:
-        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Fist.mv1").c_str());
+        modelShotId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_FIST);
         shotBullet_ = bullets.S_ELECSHOCK;
         delayShot_ = weaponDelay.S_ELECSHOCK;
         break;
     case PlayerBase::SHOT_TYPE::SNIPER:
-        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
+        modelShotId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SHOT);
         shotBullet_ = bullets.S_SNIPER;
         delayShot_ = weaponDelay.S_SNIPER;
         break;
     case PlayerBase::SHOT_TYPE::MAX:
-        modelShotId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
+        modelShotId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SHOT);
         shotBullet_ = bullets.S_MACHINE;
         delayShot_ = weaponDelay.S_MACHINE;
         break;
@@ -118,19 +121,19 @@ void PlayerBase::ChangeBomb(BOMB_TYPE bombType)
     switch (bombType)
     {
     case PlayerBase::BOMB_TYPE::CANNON:
-        modelBombId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
+       modelBombId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SHOT);
         bombBullet_ = bullets.B_CANNON;
         delayBomb_ = weaponDelay.B_CANNON;
 
         break;
     case PlayerBase::BOMB_TYPE::MINE:
-        modelBombId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
+        modelBombId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SHOT);
         bombBullet_ = bullets.B_MINE;
         delayBomb_ = weaponDelay.B_MINE;
 
         break;
     case PlayerBase::BOMB_TYPE::MAX:
-        modelBombId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
+        modelBombId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SHOT);
         bombBullet_ = bullets.B_CANNON;
         delayBomb_ = weaponDelay.B_CANNON;
         break;
@@ -149,22 +152,22 @@ void PlayerBase::ChangePod(POD_TYPE podType)
     switch (podType)
     {
     case PlayerBase::POD_TYPE::BOUNCE:
-        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/SpikeShot.mv1").c_str());
+        modelPodId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SHOT);
         podBullet_ = bullets.P_BOUNCE;
         delayPod_ = weaponDelay.P_BOUNCE;
         break;
     case PlayerBase::POD_TYPE::FREEZE:
-        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Bird.mv1").c_str());
+        modelPodId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_BIRD);
         podBullet_ = bullets.P_FREEZE;
         delayPod_ = weaponDelay.P_FREEZE;
         break;
     case PlayerBase::POD_TYPE::STICKY:
-        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/SpikeShot.mv1").c_str());
+        modelPodId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SPIKESHOT);
         podBullet_ = bullets.P_STICKY;
         delayPod_ = weaponDelay.P_STICKY;
         break;
     case PlayerBase::POD_TYPE::MAX:
-        modelPodId_ = MV1LoadModel((Application::PATH_MODEL + "Shot/Shot.mv1").c_str());
+        modelPodId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SHOT);
         podBullet_ = bullets.P_BOUNCE;
         delayPod_ = weaponDelay.P_BOUNCE;
         break;

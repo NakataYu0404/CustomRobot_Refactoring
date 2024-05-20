@@ -1,4 +1,5 @@
 #pragma once
+class ResourceManager;
 
 class Fader
 {
@@ -15,6 +16,8 @@ public:
 		FADE_OUT,	//  ™X‚ÉˆÃ“]
 		FADE_IN		//  ™X‚É–¾“]
 	};
+
+	Fader(void);
 
 	//  ó‘Ô‚Ìæ“¾
 	STATE GetState(void) const;
@@ -50,4 +53,6 @@ private:
 
 	int rand_;
 	bool random_;
+
+	ResourceManager& resMng_;
 };
