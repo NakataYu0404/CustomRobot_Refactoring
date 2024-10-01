@@ -1,5 +1,5 @@
+#include <DxLib.h>
 #include "InputManager.h"
-#include "../Utility/AsoUtility.h"
 #include "Camera.h"
 
 Camera::Camera(void)
@@ -13,16 +13,16 @@ Camera::~Camera()
 void Camera::Init(void)
 {
 	//  カメラの位置
-	pos_ = { 0.0f,540.0f,-690.0f };
+	pos_ = INIT_POS;
 	
 	//  カメラの角度
-	angles_ = { 40.0f * DX_PI_F / 180.0f,0.0f,0.0f };
+	angles_ = INIT_ANGLE;
 
-	light2_ = CreatePointLightHandle(pos_,80000.0f,0.0f,0.0015f,0.0f);
+	light2_ = CreatePointLightHandle(pos_, SUBLIGHT_RANGE, SUBLIGHT_ATTEN.x, SUBLIGHT_ATTEN.y, SUBLIGHT_ATTEN.z);
 
 	//  カメラの向きを初期化
-	cameraHAngle_ = 360.0f;
-	cameraVAngle_ = 40.0f;
+	cameraHAngle_ = INIT_ANGLE_AUTO.x;
+	cameraVAngle_ = INIT_ANGLE_AUTO.y;
 
 	targetPos_ = { 0.0f,0.0f,0.0f };
 	plDistance_ = { 0.0f,0.0f,0.0f };
