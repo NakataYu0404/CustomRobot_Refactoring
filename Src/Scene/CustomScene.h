@@ -10,7 +10,6 @@
 #include "../Object/Character/PlayerBemon.h"
 #include "../Object/Character/PlayerGhost.h"
 
-
 class PlayerBase;
 class PlayerBirb;
 class PlayerYeti;
@@ -20,195 +19,186 @@ class ResourceManager;
 
 class CustomScene : public SceneBase
 {
-
 public:
+    // プレイヤー数
+    static constexpr int PLAYER_NUM = 2;
+    // 矢印画像数
+    static constexpr int ARROW_IMAGE_NUM = 59;
+    // セレクト画像数
+    static constexpr int SELECT_IMAGE_NUM = 3;
+    // Expo画面サイズ
+    static constexpr int EXPO_SCREEN_W = 600;
+    static constexpr int EXPO_SCREEN_H = 428;
+    // プレビュー画面サイズ
+    static constexpr int PREVIEW_SCREEN_W = 428;
+    static constexpr int PREVIEW_SCREEN_H = 428;
+    // UIボックス座標
+    static constexpr int UI_BOX_X = 8;
+    static constexpr int UI_BOX_Y = 2;
+    // ウィンドウ最大サイズ
+    static constexpr float WINDOW_MAX_SIZE_X = 480.0f;
+    static constexpr float WINDOW_MAX_SIZE_Y = 0.0f;
+    // 矢印初期座標
+    static constexpr float ARROW_POS_X_INIT = 430.0f;
+    static constexpr float ARROW_POS_Y_INIT = 62.0f;
+    // フォントサイズ
+    static constexpr int FONT_SIZE = 32;
+    // ウィンドウ拡大分割数
+    static constexpr float WINDOW_DIV = 15.0f;
+    // ライン色
+    static constexpr int LINE_COLOR = 0xff8844;
 
-	//	今どこのパーツを選ぼうとしているか
-	enum class SelectState
-	{
-		NORMAL,
-		BODY,
-		GUN,
-		BOMB,
-		POD,
-		REG,
-		FINISH
-	};
+    //	今どこのパーツを選ぼうとしているか
+    enum class SelectState
+    {
+        NORMAL,
+        BODY,
+        GUN,
+        BOMB,
+        POD,
+        REG,
+        FINISH
+    };
 
-	//	体パーツ
-	enum class BODY_TYPE
-	{
-		Birb,
-		Yeti,
-		Cactoro,
-		Bemon,
-		Ghost,
+    //	体パーツ
+    enum class BODY_TYPE
+    {
+        Birb,
+        Yeti,
+        Cactoro,
+        Bemon,
+        Ghost,
+    };
 
-	};
-
-
-	//  コンストラクタ
-	CustomScene(void);
-
-	//  デストラクタ
-	~CustomScene(void);
-
-	void Init(void) override;
-	void Update(void) override;
-	void Draw(void) override;
-	void Release(void) override;
-
-	//	プレイヤーポインタの取得(SceneManagerがカスタムシーンからゲームシーンにポインタを渡すためにポインタを欲しがってる)
-	std::weak_ptr<PlayerBase> GetPlayer(int plNum);
+    //  コンストラクタ
+    CustomScene(void);
+    //  デストラクタ
+    ~CustomScene(void);
+    void Init(void) override;
+    void Update(void) override;
+    void Draw(void) override;
+    void Release(void) override;
+    //	プレイヤーポインタの取得(SceneManagerがカスタムシーンからゲームシーンにポインタを渡すためにポインタを欲しがってる)
+    std::weak_ptr<PlayerBase> GetPlayer(int plNum);
 
 private:
-	//  素体のリスト
-	std::vector <std::string> body;
-	//  ガンのリスト
-	std::vector <std::string> gun;
-	//  ボムのリスト
-	std::vector <std::string> bomb;
-	//  ポッドのリスト
-	std::vector <std::string> pod;
-	//  レッグのリスト
-	std::vector <std::string> reg;
+    // ボディ名リスト
+    std::vector <std::string> body;
+    // ガン名リスト
+    std::vector <std::string> gun;
+    // ボム名リスト
+    std::vector <std::string> bomb;
+    // ポッド名リスト
+    std::vector <std::string> pod;
+    // レグ名リスト
+    std::vector <std::string> reg;
 
-	//	セレクトウィンドウの最大、現在サイズ
-	VECTOR windowMaxSizeSelect;
-	VECTOR windowSizeSelect[2];
+    // ウィンドウ最大サイズ
+    VECTOR windowMaxSizeSelect;
+    // ウィンドウ現在サイズ
+    VECTOR windowSizeSelect[PLAYER_NUM];
 
-	//	フォントハンドル
-	int fontH;
-	//	文字描画するとき用プレイヤーごとのカラーハンドル
-	int color_[2];
+    // フォントハンドル
+    int fontH;
+    // プレイヤーカラー
+    int color_[PLAYER_NUM];
 
-	//  各パーツ選択スクリーン、プレイヤープレビュースクリーンをまとめるスクリーン　これをBACKに描画する
-	int FullScreenH;
-	//  各パーツ選択画面スクリーンハンドル
-	int bodyScreenH[2];
-	int gunScreenH[2];
-	int bombScreenH[2];
-	int podScreenH[2];
-	int regScreenH[2];
+    // フルスクリーンハンドル
+    int FullScreenH;
+    // 各種画面ハンドル
+    int bodyScreenH[PLAYER_NUM];
+    int gunScreenH[PLAYER_NUM];
+    int bombScreenH[PLAYER_NUM];
+    int podScreenH[PLAYER_NUM];
+    int regScreenH[PLAYER_NUM];
+    int PreviewScreenH[PLAYER_NUM];
+    int plScreenH[PLAYER_NUM];
+    int expoScreenH[PLAYER_NUM];
 
-	//  プレイヤープレビュー
-	int PreviewScreenH[2];
-	//  プレイヤーごとにまとめたスクリーン
-	int plScreenH[2];
+    // 1項目の高さ（blank）
+    int blank;
 
-	//  プレイヤー、武器の説明をしてくれるスクリーン
-	int expoScreenH[2];
+    // キーコンフィグ
+    PlayerBase::KEY_CONFIG keyPl;
 
-	//	各スクリーンを作成する際に用いる隙間サイズ(行間とか)
-	int blank;
+    // UI画像ハンドル
+    int UIBoxH;
+    int arrowH[ARROW_IMAGE_NUM];
+    int arrowAnimCnt_;
+    int plEndH_[PLAYER_NUM];
 
-	//  キーコンフィグ
-	PlayerBase::KEY_CONFIG keyPl;
+    // モデルハンドル
+    int modelBirbH_;
+    int modelYetiH_;
+    int modelCactoroH_;
+    int modelBemonH_;
+    int modelGhostH_;
 
-	//  画像、モデルハンドル達
-	int UIBoxH;
-	int arrowH[59];
+    // 画像ハンドル
+    int imageBirbH_;
+    int imageYetiH_;
+    int imageCactoroH_;
+    int imageBemonH_;
+    int imageGhostH_;
+    int imageMachineH_;
+    int imagePunchH_;
+    int imageSniperH_;
+    int imageCannonH_;
+    int imageDelayH_;
+    int imageBounceH_;
+    int imageAirH_;
+    int imageStickyH_;
+    int imageAirdashH_;
+    int imageHoverH_;
+    int imageReadyH_;
+    int imageSelectH_[SELECT_IMAGE_NUM];
+    int selectImgCnt_;
+    int soundBgmH_;
 
-	int arrowAnimCnt_;
+    // カスタム終了画像座標
+    VECTOR ImageEndPos_[PLAYER_NUM];
+    // プレイヤーモデルID
+    int modelPlayerId_[PLAYER_NUM];
+    // コントローラー傾き
+    int ControllerTilt_[PLAYER_NUM];
+    int ControllerTiltOld_[PLAYER_NUM];
+    // 選択状態
+    SelectState select_[PLAYER_NUM];
+    SelectState cursor_[PLAYER_NUM];
+    SelectState cursorOld_[PLAYER_NUM];
+    // 矢印座標
+    VECTOR arrowPos_[PLAYER_NUM];
+    // カスタム終了フラグ
+    bool finishFlag_[PLAYER_NUM];
+    bool finishChangeFlag_[PLAYER_NUM];
+    // プレイヤー
+    std::shared_ptr<PlayerBase> players_[PLAYER_NUM];
+    // プレイヤータイプ
+    PlayerBase::TYPE type_[PLAYER_NUM];
+    // 各種タイプ
+    BODY_TYPE bodyType_[PLAYER_NUM];
+    PlayerBase::SHOT_TYPE shotType_[PLAYER_NUM];
+    PlayerBase::BOMB_TYPE bombType_[PLAYER_NUM];
+    PlayerBase::POD_TYPE podType_[PLAYER_NUM];
+    PlayerBase::REG_TYPE regType_[PLAYER_NUM];
+    // カーソル保存用
+    PlayerBase::SHOT_TYPE cursorShot_[PLAYER_NUM];
+    PlayerBase::BOMB_TYPE cursorBomb_[PLAYER_NUM];
+    PlayerBase::POD_TYPE cursorPod_[PLAYER_NUM];
+    PlayerBase::REG_TYPE cursorReg_[PLAYER_NUM];
 
-	int plEndH_[2];
-
-	int modelBirbH_;
-	int modelYetiH_;
-	int modelCactoroH_;
-	int modelBemonH_;
-	int modelGhostH_;
-
-	int imageBirbH_;
-	int imageYetiH_;
-	int imageCactoroH_;
-	int imageBemonH_;
-	int imageGhostH_;
-
-	int imageMachineH_;
-	int imagePunchH_;
-	int imageSniperH_;
-	int imageCannonH_;
-	int imageDelayH_;
-	int imageBounceH_;
-	int imageAirH_;
-	int imageStickyH_;
-	int imageAirdashH_;
-	int imageHoverH_;
-
-	int imageReadyH_;
-
-	int imageSelectH_[3];
-	int selectImgCnt_;
-
-	int soundBgmH_;
-	
-	//	カスタム終了画像位置(移動するため必要)
-	VECTOR ImageEndPos_[2];
-
-	//  選択されているプレイヤーモデルのid
-	int modelPlayerId_[2];
-
-	//	カーソル操作の際に用いる、コントローラースティックの傾き、１フレ前の傾き
-	int ControllerTilt_[2];
-	int ControllerTiltOld_[2];
-
-	//  現在描画しているスクリーンのステート
-	SelectState select_[2];
-
-	//  カーソルのステート(決定ボタンが押された時、このステートにselect_がきてselect_のステートはcursor_に。)
-	SelectState cursor_[2];
-	SelectState cursorOld_[2];
-
-	//	カーソルの位置
-	VECTOR arrowPos_[2];
-
-	//	カスタムが終わったかフラグ
-	bool finishFlag_[2];
-	bool finishChangeFlag_[2];
-
-	//	プレイヤー
-	std::shared_ptr<PlayerBase> players_[2];
-	 
-	//	自分がプレイヤー1か2か
-	PlayerBase::TYPE type_[2];
-
-	//	各種パーツのタイプ
-	BODY_TYPE bodyType_[2];
-	PlayerBase::SHOT_TYPE shotType_[2];
-	PlayerBase::BOMB_TYPE bombType_[2];
-	PlayerBase::POD_TYPE podType_[2];
-	PlayerBase::REG_TYPE regType_[2];
-
-	//	各種パーツ選択のとき、カーソルをどこにおくか(カーソル位置を保存して、再び開いたときに、前回位置からカーソルを出発させるために必要)
-	PlayerBase::SHOT_TYPE cursorShot_[2];
-	PlayerBase::BOMB_TYPE cursorBomb_[2];
-	PlayerBase::POD_TYPE cursorPod_[2];
-	PlayerBase::REG_TYPE cursorReg_[2];
-
-	//	スクリーンの切り替え（現在スクリーンAと、パーツ選択画面選択の決定時にカーソルが乗ってたパーツ選択画面スクリーンBの切り替え）
-	void ChangeScreen(int player);
-	//  それぞれカスタムが終了した時に、武器、体を設定する(このあとゲームシーンへ)
-	void ChangeWeapon(int plNum);
-	void ChangeBody(int plNum);
-
-	//	カーソル移動と描画
-	void Cursor(void);
-
-	//	各種パーツ描画スクリーンの描画
-	void DrawBodyScreen(int player);
-	void DrawShotScreen(int player);
-	void DrawBombScreen(int player);
-	void DrawPodScreen(int player);
-	void DrawRegScreen(int player);
-
-	//	説明書き描画スクリーンの描画
-	void DrawExpoScreen(int player);
-
-	//	プレイヤー描画スクリーンの描画
-	void DrawPreviewScreen(int player);
-
-	//  ウィンドウがだんだんでかくなーる
-	void WindowBeBig(int player, int maxSizeY);
-	ResourceManager& resMng_;
+    // 画面切り替え・武器/ボディ変更・カーソル・各種描画
+    void ChangeScreen(int player);
+    void ChangeWeapon(int plNum);
+    void ChangeBody(int plNum);
+    void Cursor(void);
+    void DrawBodyScreen(int player);
+    void DrawShotScreen(int player);
+    void DrawBombScreen(int player);
+    void DrawPodScreen(int player);
+    void DrawRegScreen(int player);
+    void DrawExpoScreen(int player);
+    void DrawPreviewScreen(int player);
+    void WindowBeBig(int player, int maxSizeY);
+    ResourceManager& resMng_;
 };

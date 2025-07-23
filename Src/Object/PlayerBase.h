@@ -13,33 +13,34 @@ class ResourceManager;
 class PlayerBase
 {
 public:
-
-	//  衝突半径
+	// 衝突判定用の半径
 	static constexpr float COL_RADIUS = 35.0f;
-
-	//  回転量(deg)
+	// 回転速度（度）
 	static constexpr float SPEED_ROT = 8.0f;
-
-	//  回転量(rad)
+	// 回転速度（ラジアン）
 	static constexpr float SPEED_ROT_RAD = SPEED_ROT * DX_PI_F / 180.0f;
-
-	//  爆発のアニメーション数
+	// 爆発アニメーション枚数
 	static constexpr int BLAST_ANIM_NUM = 16;
-
-	//  爆発のサイズ
+	// 爆発画像サイズX
 	static constexpr int BLAST_SIZE_X = 32;
+	// 爆発画像サイズY
 	static constexpr int BLAST_SIZE_Y = 32;
-
 	static constexpr float MIN_MOVE_SPEED = 0.1f;
-	//  加速(accelerator=アクセラレーター)
+	// 移動加速度
 	static constexpr float MOVE_ACC = 0.10f;
-
-	//  体力最大値
-	const int hpMax_ = 999;
-
-	const float BOMB_HIGHEST = 500.0f;
-
-	int InvincibleCntMax = 10;
+	// 最大HP
+	static constexpr int MAX_HP = 999;
+	// 爆弾の最高到達点Y
+	static constexpr float BOMB_HIGHEST = 500.0f;
+	// 無敵時間最大カウント
+	static constexpr int INVINCIBLE_CNT_MAX = 10;
+	// スモーク画像枚数
+	static constexpr int SMOKE_IMAGE_NUM = 12;
+	// スモーク画像サイズ
+	static constexpr int SMOKE_SPRITE_SIZE_X = 176;
+	static constexpr int SMOKE_SPRITE_SIZE_Y = 61;
+	// スタン画像枚数
+	static constexpr int STUN_IMAGE_NUM = 4;
 
 	int smokeImage_[12];
 	VECTOR smokeSpriteSize_ = { 176,61,0 };

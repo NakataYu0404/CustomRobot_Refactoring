@@ -5,43 +5,35 @@
 
 void ShotSniper::SetParam(void)
 {
-	//  使用メモリ容量と読み込み時間削減のため
-	//  モデルデータをいくつもメモリ上に存在させない
+	// モデル複製
 	modelId_ = MV1DuplicateModel(baseModelId_);
 
-	//  弾の大きさを設定
-	scl_ = { 0.8f,0.8f,0.8f };
+	// モデルスケール設定
+	scl_ = { SCALE, SCALE, SCALE };
 
-	//  弾の角度を設定
+	// 回転初期化
 	rot_ = { 0.0f,0.0f,0.0f };
 
-	//  弾の速度
-	speed_ = 28.0f;
+	// 移動速度設定
+	speed_ = SPEED;
 
-	hpDamage_ = 499;
+	// ダメージ設定
+	hpDamage_ = HP_DAMAGE;
 	stunDamage_ = hpDamage_;
 
-	ShotBlastMax_ = 600;
+	ShotBlastMax_ = SHOT_BLAST_MAX;
 	ShotBlastCnt_ = 0;
 }
 
+
 void ShotSniper::UpdateWeapon(void)
 {
-	//  ↓弾を移動させる
-	//  移動量の計算(方向*スピード)
+	// 移動量計算（進行方向×速度）
 	movePow_ = VScale(dir_, speed_);
-	speed_++;
+	// 毎フレーム速度増加
+	speed_ += SPEED_UP;
 
-
-
-	//  大きさの設定
 	MV1SetScale(modelId_, scl_);
-
-	//  角度の設定
 	MV1SetRotationXYZ(modelId_, rot_);
-
-	//  位置の設定
 	MV1SetPosition(modelId_, pos_);
-
-
 }

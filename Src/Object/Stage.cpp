@@ -3,96 +3,74 @@
 #include "../Manager/ResourceManager.h"
 #include "Stage.h"
 
-Stage::Stage(void):resMng_(ResourceManager::GetInstance())
+Stage::Stage() : resMng_(ResourceManager::GetInstance()) {}
+
+Stage::~Stage() {}
+
+void Stage::Init()
 {
+    // 外部ファイルの3Dモデルをロード
+    modelId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_STAGE);
+    coverModelId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_COVER);
+    charId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_CHAR);
+    modelSkyId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SKYDOME);
+
+    // 3Dモデルの大きさを設定
+    MV1SetScale(modelId_, { 1.0f,1.0f,1.0f });
+    MV1SetScale(coverModelId_, { 1.0f,1.0f,1.0f });
+    MV1SetScale(charId_, { 1.0f,1.0f,1.0f });
+    MV1SetScale(modelSkyId_, {2.0f,2.0f,2.0f });
+
+    // 3Dモデルの位置設定
+    MV1SetPosition(modelId_, { 0.0f,0.0f,0.0f });
+    MV1SetPosition(coverModelId_, { 0.0f,0.0f,0.0f });
+    MV1SetPosition(charId_, { 0.0f,0.0f,0.0f });
+    MV1SetPosition(modelSkyId_, { 0.0f,0.0f,0.0f });
+
+    // 3Dモデルの回転設定
+    MV1SetRotationXYZ(modelId_, { 0.0f,0.0f,0.0f });
+    MV1SetRotationXYZ(coverModelId_, { 0.0f,0.0f,0.0f });
+    MV1SetRotationXYZ(charId_, { 0.0f,0.0f,0.0f });
+    MV1SetRotationXYZ(modelSkyId_, { 0.0f,0.0f,0.0f });
+
+    // コリジョン情報の作成
+    MV1SetupCollInfo(modelId_);
+    MV1SetupCollInfo(coverModelId_);
 }
 
-Stage::~Stage(void)
+void Stage::Update() {}
+
+void Stage::Draw()
 {
+    // シャドウマップ設定
+    SetUseShadowMap(0, shadowH);
+    MV1DrawModel(modelId_);
+    SetUseShadowMap(0, -1);
+    MV1DrawModel(charId_);
+    MV1DrawModel(modelSkyId_);
 }
 
-void Stage::Init(void)
+void Stage::Release()
 {
-	
-	//  外部ファイルの3Dモデルをロード
-	modelId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_STAGE);
-	coverModelId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_COVER);
-	charId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_CHAR);
-
-	modelSkyId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_SKYDOME);
-
-	//  3Dモデルの大きさを設定(引数はXYZの倍数)
-	MV1SetScale(modelId_, { 1.0f,1.0f,1.0f });
-	MV1SetScale(coverModelId_, { 1.0f,1.0f,1.0f });
-
-	MV1SetScale(charId_, { 1.0f,1.0f,1.0f });
-	
-	MV1SetScale(modelSkyId_, {2.0f,2.0f,2.0f });
-
-	//  3Dモデルの位置(引数は3D座標)
-	MV1SetPosition(modelId_, { 0.0f,0.0f,0.0f });
-	MV1SetPosition(coverModelId_, { 0.0f,0.0f,0.0f });
-
-	MV1SetPosition(charId_, { 0.0f,0.0f,0.0f });
-	MV1SetPosition(modelSkyId_, { 0.0f,0.0f,0.0f });
-
-	//  3Dモデルの向き(引数は、XYZの回転量 単位はラジアン)
-	MV1SetRotationXYZ(modelId_, { 0.0f,0.0f,0.0f });
-	MV1SetRotationXYZ(coverModelId_, { 0.0f,0.0f,0.0f });
-
-	MV1SetRotationXYZ(charId_, { 0.0f,0.0f,0.0f });
-	MV1SetRotationXYZ(modelSkyId_, { 0.0f,0.0f,0.0f });
-
-	//  衝突判定情報(コライダ)の作成
-	MV1SetupCollInfo(modelId_);
-	MV1SetupCollInfo(coverModelId_);
-
+    // モデルの削除
+    MV1DeleteModel(modelId_);
+    MV1DeleteModel(coverModelId_);
+    MV1DeleteModel(charId_);
+    MV1DeleteModel(modelSkyId_);
 }
 
-void Stage::Update(void)
+int Stage::GetModelId()
 {
-
+    return modelId_;
 }
 
-void Stage::Draw(void)
+int Stage::GetCoverModelId()
 {
-
-	//  描画に使用するシャドウマップを設定
-	SetUseShadowMap(0, shadowH);
-	//  モデルの描画
-	MV1DrawModel(modelId_);
-	//  描画に使用するシャドウマップの設定を解除
-	SetUseShadowMap(0, -1);
-
-	MV1DrawModel(charId_);
-	MV1DrawModel(modelSkyId_);
-
+    return coverModelId_;
 }
 
-void Stage::Release(void)
+void Stage::SetShadowH(int handle)
 {
-	//  ロードされた3Dモデルをメモリから解放
-	MV1DeleteModel(modelId_);
-	MV1DeleteModel(coverModelId_);
-	MV1DeleteModel(charId_);
-	MV1DeleteModel(charId_);
-	MV1DrawModel(modelSkyId_);
-
-
-}
-
-int Stage::GetModelId(void)
-{
-	return modelId_;
-}
-
-int Stage::GetCoverModelId(void)
-{
-	return coverModelId_;
-}
-
-void Stage::SetShadowH(int Hand)
-{
-	shadowH = Hand;
+    shadowH = handle;
 }
 

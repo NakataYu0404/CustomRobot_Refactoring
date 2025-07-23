@@ -5,34 +5,32 @@
 
 void PodBounce::SetParam(void)
 {
-	//  使用メモリ容量と読み込み時間削減のため
-//  モデルデータをいくつもメモリ上に存在させない
+	// モデル複製
 	modelId_ = MV1DuplicateModel(baseModelId_);
 
-	//  弾の大きさを設定
-	scl_ = { 0.15f,0.15f,0.15f };
+	// モデルスケール設定
+	scl_ = { SCALE, SCALE, SCALE };
 
-	//  弾の角度を設定
+	// 回転初期化
 	rot_ = { 0.0f,0.0f,0.0f };
 
-	//  弾の速度
-	speed_ = 8.0f;
+	// 移動速度設定
+	speed_ = SPEED;
 
-	hpDamage_ = 56;
+	// ダメージ設定
+	hpDamage_ = HP_DAMAGE;
 	stunDamage_ = hpDamage_;
 
-	ShotBlastMax_ = 1200;
+	ShotBlastMax_ = SHOT_BLAST_MAX;
 	ShotBlastCnt_ = 0;
-
-	bounceCnt_ = 14;
-
+	bounceCnt_ = BOUNCE_MAX_CNT;
 	playerHit_ = false;
 }
 
 void PodBounce::UpdateWeapon(void)
 {
-	//  地面と平行にしか移動しないためY方向を0に
-	if (pos_.y > 25.0f)
+	// Y座標が境界より大きい場合は下向き、そうでなければ水平
+	if (pos_.y > BOUNCE_Y_BORDER)
 	{
 		dir_.y = -1.0f;
 	}
@@ -40,30 +38,17 @@ void PodBounce::UpdateWeapon(void)
 	{
 		dir_.y = 0.0f;
 	}
-
 	rot_.x += AsoUtility::Rad2DegF(AsoUtility::Deg2RadF(1.0f) - fabsf(dir_.z));
 	rot_.z += AsoUtility::Rad2DegF(AsoUtility::Deg2RadF(1.0f) - fabsf(dir_.x));
-
-
-	//  移動量の計算(方向*スピード)
 	VECTOR movePow = VScale(dir_, speed_);
-
-	//  移動処理(座標+移動量) 落下を考えていない
 	pos_ = VAdd(pos_, movePow);
-
-	//  大きさの設定
 	MV1SetScale(modelId_, scl_);
-
-	//  角度の設定
 	MV1SetRotationXYZ(modelId_, rot_);
-
-	//  位置の設定
 	MV1SetPosition(modelId_, pos_);
 }
 
 void PodBounce::UpdateBlast(void)
 {
-
 	if (bounceCnt_ > 0 && playerHit_ == false)
 	{
 		Bounce();
@@ -72,11 +57,7 @@ void PodBounce::UpdateBlast(void)
 	else
 	{
 		bounceCnt_ = 0;
-		//  アニメーション処理
 		blastIdxAnim_++;
-		//  アニメーションが終了したら、STATEをENDへ
-
-		//  爆発アニメーションの終了判定
 		if (blastIdxAnim_ + 1 >= blastAnimNum_)
 		{
 			blastIdxAnim_ = 0;
@@ -89,12 +70,11 @@ void PodBounce::DrawBlast(void)
 {
 	if (bounceCnt_ <= 0)
 	{
-		DrawBillboard3D(pos_, 0.5f, 0.5f, 80.0f, 0.0f, blastImgs_[blastIdxAnim_], true);
+		DrawBillboard3D(pos_, BLAST_DRAW_SCALE, BLAST_DRAW_SCALE, BLAST_DRAW_SIZE, BLAST_DRAW_ROT, blastImgs_[blastIdxAnim_], true);
 	}
 	else
 	{
 		COLOR_F tmpCol = weaponColor_[plNum_ - 1];
-
 		switch (plNum_)
 		{
 		case 1:
@@ -104,7 +84,6 @@ void PodBounce::DrawBlast(void)
 			tmpCol = GetColorF(0.2f, 0.3f, 0.8f, 1.0f);
 			break;
 		}
-
 		MV1DrawModel(modelId_);
 	}
 }

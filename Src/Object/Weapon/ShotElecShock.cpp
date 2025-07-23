@@ -4,23 +4,23 @@
 
 void ShotElecShock::SetParam(void)
 {
-	//  使用メモリ容量と読み込み時間削減のため
-	//  モデルデータをいくつもメモリ上に存在させない
+	// モデル複製
 	modelId_ = MV1DuplicateModel(baseModelId_);
 
-	//  弾の大きさを設定
-	scl_ = { 4.0f,4.0f,4.0f };
+	// モデルスケール設定
+	scl_ = { SCALE, SCALE, SCALE };
 
-	//  弾の角度を設定
+	// 回転初期化
 	rot_ = { 0.0f,0.0f,0.0f };
 
-	//  弾の速度
-	speed_ = 10.0f;
+	// 移動速度設定
+	speed_ = SPEED;
 
-	hpDamage_ = 70;
-	stunDamage_ = 250;
+	// ダメージ設定
+	hpDamage_ = HP_DAMAGE;
+	stunDamage_ = STUN_DAMAGE;
 
-	ShotBlastMax_ = 30;
+	ShotBlastMax_ = SHOT_BLAST_MAX;
 	ShotBlastCnt_ = 0;
 }
 

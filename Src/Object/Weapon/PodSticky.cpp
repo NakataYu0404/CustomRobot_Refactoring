@@ -5,25 +5,24 @@
 
 void PodSticky::SetParam(void)
 {
-	//  使用メモリ容量と読み込み時間削減のため
-//  モデルデータをいくつもメモリ上に存在させない
+	//  モデル複製
 	modelId_ = MV1DuplicateModel(baseModelId_);
 
-	//  弾の大きさを設定
-	scl_ = { 0.4f,0.4f,0.4f };
+	//  モデルスケール設定
+	scl_ = { SCALE, SCALE, SCALE };
 
-	//  弾の角度を設定
+	//  回転初期化
 	rot_ = { 0.0f,0.0f,0.0f };
 
-	//  弾の速度
-	speed_ = 8.0f;
+	//  移動速度設定
+	speed_ = SPEED;
 
-	hpDamage_ = 50;
+	//  ダメージ設定
+	hpDamage_ = HP_DAMAGE;
 	stunDamage_ = hpDamage_;
 
-	ShotBlastMax_ = 0;
+	ShotBlastMax_ = SHOT_BLAST_MAX;
 	ShotBlastCnt_ = 0;
-
 
 	playerHit_ = false;
 	stickFlag_ = false;
@@ -35,7 +34,7 @@ void PodSticky::UpdateWeapon(void)
 	{
 
 		//  地面と平行にしか移動しないためY方向を0に
-		if (pos_.y > 25.0f)
+		if (pos_.y > BOUNCE_Y_BORDER)
 		{
 			dir_.y = -1.0f;
 		}
@@ -54,26 +53,19 @@ void PodSticky::UpdateWeapon(void)
 		//  移動処理(座標+移動量) 落下を考えていない
 		pos_ = VAdd(pos_, movePow);
 	}
-	//  大きさの設定
+
+	//  モデルのスケール、回転、位置を設定
 	MV1SetScale(modelId_, scl_);
-
-	//  角度の設定
 	MV1SetRotationXYZ(modelId_, rot_);
-
-	//  位置の設定
 	MV1SetPosition(modelId_, pos_);
 }
 
 void PodSticky::UpdateBlast(void)
 {
 
-	//  大きさの設定
+	//  モデルのスケール、回転、位置を設定
 	MV1SetScale(modelId_, scl_);
-
-	//  角度の設定
 	MV1SetRotationXYZ(modelId_, rot_);
-
-	//  位置の設定
 	MV1SetPosition(modelId_, pos_);
 
 	stickFlag_ = true;
@@ -92,9 +84,13 @@ float PodSticky::GetRadius(void)
 {
 	VECTOR scale = { 0.0f,0.0f,0.0f };
 	float radius = 0.0f;
-	scale.x = scl_.x * 100.0f;
-	scale.y = scl_.y * 100.0f;
-	scale.z = scl_.z * 100.0f;
+
+	//  半径計算のためスケールを取得
+	scale.x = scl_.x * RADIUS_SCALE;
+	scale.y = scl_.y * RADIUS_SCALE;
+	scale.z = scl_.z * RADIUS_SCALE;
+
+	//  スケールの平均値を半径とする
 	radius = (scale.x + scale.y + scale.z) / 3;
 	return radius;
 }

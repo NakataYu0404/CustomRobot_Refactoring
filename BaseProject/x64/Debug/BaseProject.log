@@ -1,0 +1,65 @@
+﻿  SceneManager.cpp
+  CustomScene.cpp
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(132,76): warning C4267: '引数': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(132,54): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(133,74): warning C4267: '引数': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(133,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(134,76): warning C4267: '引数': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(134,54): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(135,74): warning C4267: '引数': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(135,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(136,74): warning C4267: '引数': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(136,53): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(268,51): warning C4838: 'const int' から 'float' への変換には縮小変換が必要です
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(268,51): warning C4244: '初期化中': 'const int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(268,92): warning C4838: 'const int' から 'float' への変換には縮小変換が必要です
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(268,92): warning C4244: '初期化中': 'const int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(308,54): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(308,34): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(346,56): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(346,33): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(357,27): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(794,15): warning C4267: '初期化中': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(796,65): warning C4267: '引数': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(796,43): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(805,54): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(805,33): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(808,104): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(808,65): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(818,14): warning C4267: '初期化中': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(820,64): warning C4267: '引数': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(820,43): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(828,54): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(828,33): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(831,104): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(831,65): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(841,15): warning C4267: '初期化中': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(843,65): warning C4267: '引数': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(843,43): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(851,54): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(851,33): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(854,104): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(854,65): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(864,14): warning C4267: '初期化中': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(866,64): warning C4267: '引数': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(866,43): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(874,54): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(874,33): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(877,104): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(877,65): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(887,14): warning C4267: '初期化中': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(889,64): warning C4267: '引数': 'size_t' から 'int' に変換しました。データが失われているかもしれません。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(889,43): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(897,54): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(897,33): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(900,104): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(900,65): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(1110,57): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\CustomScene.cpp(1132,33): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+  GameScene.cpp
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\GameScene.cpp(264,50): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\GameScene.cpp(264,58): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\GameScene.cpp(268,56): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\Src\Scene\GameScene.cpp(277,56): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+  コードを生成中...
+  BaseProject.vcxproj -> C:\Users\2216010\Documents\GitHub\CustomRobot_Refactoring\x64\Debug\BaseProject.exe

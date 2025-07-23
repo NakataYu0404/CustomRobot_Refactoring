@@ -17,6 +17,58 @@
 #include "../Manager/Camera.h"
 #include "PlayerBase.h"
 
+// 定数（マジックナンバー）
+namespace {
+    // 初期座標
+    static constexpr float INIT_POS_X_P1 = -500.0f;
+    static constexpr float INIT_POS_X_P2 = 500.0f;
+    static constexpr float INIT_POS_Y = 0.0f;
+    static constexpr float INIT_POS_Z = 75.0f;
+    // スモーク画像枚数
+    static constexpr int SMOKE_IMAGE_NUM = 12;
+    // スタン画像枚数
+    static constexpr int STUN_IMAGE_NUM = 4;
+    // アニメーション番号
+    static constexpr int ANIM_IDLE = 3;
+    static constexpr int ANIM_WALK = 10;
+    static constexpr int ANIM_RUN = 9;
+    static constexpr int ANIM_JUMP = 5;
+    static constexpr int ANIM_STUN = 7;
+    // カプセル判定
+    static constexpr float CAPSULE_SPOS_Y = 70.0f;
+    static constexpr float CAPSULE_EPOS_Y = 25.0f;
+    static constexpr int CAPSULE_RADIUS = 25;
+    // スフィア判定
+    static constexpr float SPHERE_POS_Y = 22.8f;
+    static constexpr int SPHERE_RADIUS = 23;
+    // ジャンプ煙描画
+    static constexpr float JUMP_SMOKE_DRAW_SCALE = 0.5f;
+    static constexpr float JUMP_SMOKE_DRAW_SIZE = 250.0f;
+    // スタン煙描画
+    static constexpr float STUN_SMOKE_DRAW_SCALE = 0.5f;
+    static constexpr float STUN_SMOKE_DRAW_SIZE = 100.0f;
+    // アタック移動倍率
+    static constexpr float ATTACK_MOVE_SCALE = 30.0f;
+    // ダメージ移動倍率
+    static constexpr float DAMAGE_MOVE_SCALE_STUN = 8.0f;
+    static constexpr float DAMAGE_MOVE_SCALE_NORMAL = 5.0f;
+    // ジャンプ力
+    static constexpr float DAMAGE_JUMP_POW = 2.0f;
+    static constexpr float DAMAGE_Y_OFFSET = 0.02f;
+    static constexpr float BOMB_JUMP_POW = 10.0f;
+    static constexpr float BOMB_Y_OFFSET = 0.2f;
+    // PodSticky最大数
+    static constexpr int PODSTICKY_MAX = 2;
+    // AirDash速度
+    static constexpr float AIRDASH_SPEED_INIT = 3.0f;
+    static constexpr float AIRDASH_SPEED_DEC = 0.1f;
+    static constexpr float AIRDASH_SPEED_MIN = 0.1f;
+    static constexpr float AIRDASH_JUMPPOW = -8.0f;
+    // 色
+    static constexpr float COLOR_ONE = 1.0f;
+    static constexpr float COLOR_ZERO = 0.0f;
+}
+
 //   //タブ
 //  //スペース
 PlayerBase::PlayerBase(void) :resMng_(ResourceManager::GetInstance())
@@ -201,10 +253,10 @@ void PlayerBase::SetCommon(void)
     case PlayerBase::TYPE::NONE:
         break;
     case PlayerBase::TYPE::PLAYER_1:
-        pos_ = { -500.0f,0.0f,75.0f };
+        pos_ = { INIT_POS_X_P1,INIT_POS_Y,INIT_POS_Z };
         break;
     case PlayerBase::TYPE::PLAYER_2:
-        pos_ = { 500.0f,0.0f,75.0f };
+        pos_ = { INIT_POS_X_P2,INIT_POS_Y,INIT_POS_Z };
         break;
     case PlayerBase::TYPE::MAX:
         break;
@@ -233,7 +285,7 @@ void PlayerBase::SetCommon(void)
     //  衝突判定用の球体中心の調整座標
     collisionLocalPos_ = { 0.0f, 50.0f, 0.0f };
 
-    hp_ = hpMax_;
+    hp_ = MAX_HP;
 
     attackFlag = false;
     alreadyAttackHit_ = false;
@@ -276,7 +328,7 @@ void PlayerBase::SetCommon(void)
     
     PythagorasDisXZ_ = 0.0f;
 
-    invincibleCnt_ = InvincibleCntMax;
+    invincibleCnt_ = INVINCIBLE_CNT_MAX;
     invincible_ = false;
 
     recovery_ = true;
@@ -423,35 +475,35 @@ void PlayerBase::Draw(void)
     //  状況にあわせた色
     if (invincible_)
     {
-        MV1SetDifColorScale(modelId_, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-        MV1SetSpcColorScale(modelId_, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-        MV1SetEmiColorScale(modelId_, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
-        MV1SetAmbColorScale(modelId_, GetColorF(1.0f, 0.0f, 0.0f, 1.0f));
+        MV1SetDifColorScale(modelId_, GetColorF(COLOR_ONE, COLOR_ZERO, COLOR_ZERO, COLOR_ONE));
+        MV1SetSpcColorScale(modelId_, GetColorF(COLOR_ONE, COLOR_ZERO, COLOR_ZERO, COLOR_ONE));
+        MV1SetEmiColorScale(modelId_, GetColorF(COLOR_ONE, COLOR_ZERO, COLOR_ZERO, COLOR_ONE));
+        MV1SetAmbColorScale(modelId_, GetColorF(COLOR_ONE, COLOR_ZERO, COLOR_ZERO, COLOR_ONE));
     }
     else if (status_ == STATUS::STUN)
     {
-        MV1SetDifColorScale(modelId_, GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
-        MV1SetSpcColorScale(modelId_, GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
-        MV1SetEmiColorScale(modelId_, GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
-        MV1SetAmbColorScale(modelId_, GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
+        MV1SetDifColorScale(modelId_, GetColorF(COLOR_ZERO, COLOR_ZERO, COLOR_ONE, COLOR_ONE));
+        MV1SetSpcColorScale(modelId_, GetColorF(COLOR_ZERO, COLOR_ZERO, COLOR_ONE, COLOR_ONE));
+        MV1SetEmiColorScale(modelId_, GetColorF(COLOR_ZERO, COLOR_ZERO, COLOR_ONE, COLOR_ONE));
+        MV1SetAmbColorScale(modelId_, GetColorF(COLOR_ZERO, COLOR_ZERO, COLOR_ONE, COLOR_ONE));
 
         VECTOR head = pos_;
         head.y += 50.0f;
     }
     else if (status_ == STATUS::RECOVERY)
     {
-        MV1SetDifColorScale(modelId_, GetColorF(0.0f, 1.0f, 0.0f, 1.0f));
-        MV1SetSpcColorScale(modelId_, GetColorF(0.0f, 1.0f, 0.0f, 1.0f));
-        MV1SetEmiColorScale(modelId_, GetColorF(0.0f, 1.0f, 0.0f, 1.0f));
-        MV1SetAmbColorScale(modelId_, GetColorF(0.0f, 1.0f, 0.0f, 1.0f));
+        MV1SetDifColorScale(modelId_, GetColorF(COLOR_ZERO, COLOR_ONE, COLOR_ZERO, COLOR_ONE));
+        MV1SetSpcColorScale(modelId_, GetColorF(COLOR_ZERO, COLOR_ONE, COLOR_ZERO, COLOR_ONE));
+        MV1SetEmiColorScale(modelId_, GetColorF(COLOR_ZERO, COLOR_ONE, COLOR_ZERO, COLOR_ONE));
+        MV1SetAmbColorScale(modelId_, GetColorF(COLOR_ZERO, COLOR_ONE, COLOR_ZERO, COLOR_ONE));
 
     }
     else
     {
-        MV1SetDifColorScale(modelId_, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
-        MV1SetSpcColorScale(modelId_, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
-        MV1SetEmiColorScale(modelId_, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
-        MV1SetAmbColorScale(modelId_, GetColorF(1.0f, 1.0f, 1.0f, 1.0f));
+        MV1SetDifColorScale(modelId_, GetColorF(COLOR_ONE, COLOR_ONE, COLOR_ONE, COLOR_ONE));
+        MV1SetSpcColorScale(modelId_, GetColorF(COLOR_ONE, COLOR_ONE, COLOR_ONE, COLOR_ONE));
+        MV1SetEmiColorScale(modelId_, GetColorF(COLOR_ONE, COLOR_ONE, COLOR_ONE, COLOR_ONE));
+        MV1SetAmbColorScale(modelId_, GetColorF(COLOR_ONE, COLOR_ONE, COLOR_ONE, COLOR_ONE));
     }
     if (recoveryCnt_ <= 180)
     {
@@ -469,7 +521,7 @@ void PlayerBase::Draw(void)
     {
         VECTOR head = pos_;
         head.y += 40;
-        DrawBillboard3D(head, 0.5f, 0.0f, 100.0f, 0.0f, stunImgs_[stunCnt_ /3 % 4], true);
+        DrawBillboard3D(head, STUN_SMOKE_DRAW_SCALE, 0.0f, STUN_SMOKE_DRAW_SIZE, 0.0f, stunImgs_[stunCnt_ /3 % STUN_IMAGE_NUM], true);
     }
 
 
@@ -521,9 +573,9 @@ void PlayerBase::Draw(void)
 
     if (isPutJumpKey_ && !isSpriteEnd_)
     {
-        DrawBillboard3D(jumpPos_, 0.5f, 0.0f, 250.0f, 0.0f, smokeImage_[smokesprite], true);
+        DrawBillboard3D(jumpPos_, JUMP_SMOKE_DRAW_SCALE, 0.0f, JUMP_SMOKE_DRAW_SIZE, 0.0f, smokeImage_[smokesprite], true);
         smokesprite++;
-        if (smokesprite >= 12)
+        if (smokesprite >= SMOKE_IMAGE_NUM)
         {
             isSpriteEnd_ = true;
         }
@@ -691,20 +743,20 @@ void PlayerBase::Damage(int hpDamage, int stunDamage, VECTOR weaponDir, ATTACK_T
         {
             dir_ = weaponDir;
             VECTOR wdir = AsoUtility::NormalizeV(dir_);
-            pos_.x += wdir.x * 8.0f;
-            pos_.z += wdir.z * 8.0f;
-            jumpPow_ = 2.0f;
-            pos_.y+=0.02f;
+            pos_.x += wdir.x * DAMAGE_MOVE_SCALE_STUN;
+            pos_.z += wdir.z * DAMAGE_MOVE_SCALE_STUN;
+            jumpPow_ = DAMAGE_JUMP_POW;
+            pos_.y+=DAMAGE_Y_OFFSET;
 
         }
         else
         {
             dir_ = weaponDir;
             VECTOR wdir = AsoUtility::NormalizeV(dir_);
-            pos_.x += wdir.x * 5.0f;
-            pos_.z += wdir.z * 5.0f;
-            jumpPow_ = 2.0f;
-            pos_.y += 0.02f;
+            pos_.x += wdir.x * DAMAGE_MOVE_SCALE_NORMAL;
+            pos_.z += wdir.z * DAMAGE_MOVE_SCALE_NORMAL;
+            jumpPow_ = DAMAGE_JUMP_POW;
+            pos_.y += DAMAGE_Y_OFFSET;
 
         }
         break;
@@ -712,14 +764,14 @@ void PlayerBase::Damage(int hpDamage, int stunDamage, VECTOR weaponDir, ATTACK_T
         if (status_ == STATUS::STUN)
         {
             speed_ = 0.0f;
-            jumpPow_ = 10.0f;
-            pos_.y += 0.2f;
+            jumpPow_ = BOMB_JUMP_POW;
+            pos_.y += BOMB_Y_OFFSET;
         }
         else
         {
             speed_ = 0.0f;
-            jumpPow_ = 10.0f;
-            pos_.y += 0.2f;
+            jumpPow_ = BOMB_JUMP_POW;
+            pos_.y += BOMB_Y_OFFSET;
             //  ボムに当たると、強制スタン
             stunHp_ = 0;
         }
@@ -730,11 +782,11 @@ void PlayerBase::Damage(int hpDamage, int stunDamage, VECTOR weaponDir, ATTACK_T
             dir_ = weaponDir;
 
             VECTOR wdir = AsoUtility::NormalizeV(dir_);
-            pos_.x += wdir.x * 8.0f;
-            pos_.z += wdir.z * 8.0f;
+            pos_.x += wdir.x * DAMAGE_MOVE_SCALE_STUN;
+            pos_.z += wdir.z * DAMAGE_MOVE_SCALE_STUN;
 
-            jumpPow_ = 2.0f;
-            pos_.y += 0.2f;
+            jumpPow_ = DAMAGE_JUMP_POW;
+            pos_.y += BOMB_Y_OFFSET;
 
 
         }
@@ -743,11 +795,11 @@ void PlayerBase::Damage(int hpDamage, int stunDamage, VECTOR weaponDir, ATTACK_T
             dir_ = weaponDir;
 
             VECTOR wdir = AsoUtility::NormalizeV(dir_);
-            pos_.x += wdir.x * 5.0f;
-            pos_.z += wdir.z * 5.0f;
+            pos_.x += wdir.x * DAMAGE_MOVE_SCALE_NORMAL;
+            pos_.z += wdir.z * DAMAGE_MOVE_SCALE_NORMAL;
 
-            jumpPow_ = 2.0f;
-            pos_.y += 0.2f;
+            jumpPow_ = DAMAGE_JUMP_POW;
+            pos_.y += BOMB_Y_OFFSET;
 
         }
         break;
@@ -1189,7 +1241,7 @@ void PlayerBase::Pod(POD_TYPE podType)
             return;
         }
         //  空き配列が無かった場合の発射処理
-        if (pods_.size() < 2)
+        if (pods_.size() < PODSTICKY_MAX)
         {
             std::shared_ptr<WeaponBase> pod = nullptr;
             pod = std::make_shared<PodSticky>();
@@ -1526,21 +1578,19 @@ void PlayerBase::Attack(void)
     auto& ins = InputManager::GetInstance();
 
     //  弾処理
-    if (!(ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.TACKLE))&&(invincibleCnt_ > InvincibleCntMax) || isJump_ || isShot_)
+    if (!(ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.TACKLE))&&(invincibleCnt_ > INVINCIBLE_CNT_MAX) || isJump_ || isShot_)
     {
         invincible_ = false;
         alreadyAttackHit_ = false;
         return;
     }
-
     if (ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.TACKLE))
     { 
         if (delayAttackCnt_ < delayAttack_)
         {
             return;
         }
-
-        if (invincibleCnt_ > InvincibleCntMax)
+        if (invincibleCnt_ > INVINCIBLE_CNT_MAX)
         {
             delayAttackCnt_ = 0;
             invincibleCnt_ = 0;
@@ -1558,15 +1608,10 @@ void PlayerBase::Attack(void)
 
 
     //  無敵時間カウンタが無敵時間未満だったら
-    if (invincibleCnt_ < InvincibleCntMax && attackFlag == true)
+    if (invincibleCnt_ < INVINCIBLE_CNT_MAX && attackFlag == true)
     {
-        //  突進
-
-        //  MAXで移動距離を割ることによって、動く距離がちょうど敵までになるはず・・・？
-        pos_.x += attackPlEnVec_.x * 30.0f;
-        pos_.z += attackPlEnVec_.z * 30.0f;
-        
-        //  無敵フラグをON
+        pos_.x += attackPlEnVec_.x * ATTACK_MOVE_SCALE;
+        pos_.z += attackPlEnVec_.z * ATTACK_MOVE_SCALE;
         invincible_ = true;
     }
     else
@@ -1678,7 +1723,7 @@ void PlayerBase::AirDash(void)
 
     if (ins.IsPadBtnTrgDown(static_cast<InputManager::JOYPAD_NO>(playerNumber_), keyConfig_.JUMP) && airDashCnt_ < MAX_AIRDASH_CNT && !isAirDash_)
     {
-        airDashSpeed_ = 3.0f;
+        airDashSpeed_ = AIRDASH_SPEED_INIT;
         isAirDash_ = true;
         alreadyAirDash_ = true;
         airDashCnt_++;
@@ -1744,15 +1789,15 @@ void PlayerBase::AirDash(void)
 
         if (airDashSpeed_ > 0)
         {
-            airDashSpeed_ -= 0.1f;
+            airDashSpeed_ -= AIRDASH_SPEED_DEC;
         }
-        if (airDashSpeed_ <= 0.1)
+        if (airDashSpeed_ <= AIRDASH_SPEED_MIN)
         {
             isAirDash_ = false;
-            airDashSpeed_ = 3.0f;
+            airDashSpeed_ = AIRDASH_SPEED_INIT;
             if (airDashCnt_ >= MAX_AIRDASH_CNT || (airDashDir_.x == 0 && airDashDir_.z == 0))
             {
-                SetJumpPow(-8.0f);
+                SetJumpPow(AIRDASH_JUMPPOW);
             }
         }
     }

@@ -9,18 +9,18 @@ void ShotMachine::SetParam(void)
 	modelId_ = MV1DuplicateModel(baseModelId_);
 
 	//  ’e‚Ì‘å‚«‚³‚ğİ’è
-	scl_ = { 0.8f,0.8f,0.8f };
+	scl_ = { SCALE, SCALE, SCALE };
 
 	//  ’e‚ÌŠp“x‚ğİ’è
 	rot_ = { 0.0f,0.0f,0.0f };
 
 	//  ’e‚Ì‘¬“x
-	speed_ = 20.0f;
+	speed_ = SPEED;
 
-	hpDamage_ = 65;
+	hpDamage_ = HP_DAMAGE;
 	stunDamage_ = hpDamage_;
 
-	ShotBlastMax_ = 600;
+	ShotBlastMax_ = SHOT_BLAST_MAX;
 	ShotBlastCnt_ = 0;
 }
 

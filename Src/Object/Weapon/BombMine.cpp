@@ -7,36 +7,32 @@
 
 void BombMine::SetParam(void)
 {
-	//  使用メモリ容量と読み込み時間削減のため
-	//  モデルデータをいくつもメモリ上に存在させない
+	//  モデル複製
 	modelId_ = MV1DuplicateModel(baseModelId_);
 
-	//  弾の大きさを設定
-	scl_ = { 0.8f,0.8f,0.8f };
+	//  モデルスケール設定
+	scl_ = { SCALE, SCALE, SCALE };
 
-	//  弾の角度を設定
+	//  回転初期化
 	rot_ = { 0.0f,0.0f,0.0f };
 
-	//  弾の速度
-	speed_ = 8.0f;
+	//  移動速度設定
+	speed_ = SPEED;
 
-	hpDamage_ = 75;
+	//  ダメージ設定
+	hpDamage_ = HP_DAMAGE;
 	stunDamage_ = hpDamage_;
 
 	ShotBlastCnt_ = 0;
-
 	moveDistance = 0.0f;
-
-	ShotBlastMax_ = 600;
+	ShotBlastMax_ = SHOT_BLAST_MAX;
 	blastCnt_ = 0;
 	waitCnt_ = 0;
-
 }
 
 void BombMine::UpdateWeapon(void)
 {
-	//  ↓弾を移動させる
-	//  移動量の計算(方向*スピード)
+	//  移動量計算
 	VECTOR movePow = VScale(dir_, speed_);
 	//  移動距離を測る
 	moveDistance += sqrt((movePow.x * movePow.x) + (movePow.z * movePow.z));
@@ -47,7 +43,6 @@ void BombMine::UpdateWeapon(void)
 		pos_ = VAdd(pos_, VScale({ 0.0f,-1.0f,0.0f }, gravityPow_));
 
 	}
-
 	//  移動処理(座標+移動量) 落下を考えていない
 	pos_ = VAdd(pos_, movePow);
 
@@ -70,21 +65,20 @@ void BombMine::UpdateWeapon(void)
 void BombMine::UpdateBlast(void)
 {
 	waitCnt_++;
-	if (waitCnt_ < 120)
+	if (waitCnt_ < BLAST_WAIT_CNT)
 	{
 		return;
 	}
 
-	float sclUp = 0.05f;
 	if (blastCnt_ == 0)
 	{
 		//  特定の大きさ(10)まで段々でかくする
-		scl_.x += sclUp;
-		scl_.y += sclUp;
-		scl_.z += sclUp;
+		scl_.x += BLAST_SCL_UP;
+		scl_.y += BLAST_SCL_UP;
+		scl_.z += BLAST_SCL_UP;
 	}
 	//  演出の為に回転させる
-	rot_.y += 0.05f;
+	rot_.y += BLAST_ROT_Y;
 
 	//  大きさの設定
 	MV1SetScale(modelId_, scl_);
@@ -95,12 +89,12 @@ void BombMine::UpdateBlast(void)
 	//  位置の設定
 	MV1SetPosition(modelId_, pos_);
 
-	if (scl_.x > 15.0)
+	if (scl_.x > BLAST_MAX_SCL)
 	{
 		//  特定の大きさより大きくなったら、持続カウンタを回す
 		blastCnt_++;
 	}
-	if (blastCnt_ >= 80)
+	if (blastCnt_ >= BLAST_MAX_CNT)
 	{
 		//  持続カウンタがいっぱいになったら消す
 		ChangeState(STATE::END);
@@ -118,7 +112,7 @@ void BombMine::DrawShot(void)
 
 void BombMine::DrawBlast(void)
 {
-	if (waitCnt_ < 120)
+	if (waitCnt_ < BLAST_WAIT_CNT)
 	{
 		MV1DrawModel(modelId_);
 		return;
@@ -154,6 +148,5 @@ bool BombMine::IsShot(void)
 	}
 
 	return false;
-
 }
 

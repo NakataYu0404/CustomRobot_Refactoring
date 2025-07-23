@@ -9,6 +9,26 @@
 #include "../Object/PlayerBase.h"
 #include "GameScene.h"
 
+// 定数（マジックナンバー）
+namespace {
+    constexpr int PLAYER_NUM = 2;                // プレイヤー数
+    constexpr int HP_WINDOW_W = 500;             // HPウィンドウ幅
+    constexpr int HP_WINDOW_H = 163;             // HPウィンドウ高さ
+    constexpr int HP_BAR_X = 0;                  // HPバーX座標
+    constexpr int HP_BAR_Y = 67;                 // HPバーY座標
+    constexpr int HP_NUM_X = 336;                // HP数値X座標
+    constexpr int HP_NUM_Y = 92;                 // HP数値Y座標
+    constexpr int HP_NUM_TENS_OFFSET = 51;       // 十の位オフセット
+    constexpr int HP_NUM_ONES_OFFSET = 100;      // 一の位オフセット
+    constexpr int GAME_COUNT_MAX = 5;            // カウントダウン最大
+    constexpr int SHADOW_MAP_SIZE = 2048;        // シャドウマップサイズ
+    constexpr float SHADOW_AREA_MIN = -1000.0f;  // シャドウ描画範囲最小
+    constexpr float SHADOW_AREA_MAX = 1000.0f;   // シャドウ描画範囲最大
+    constexpr float CAPSULE_RADIUS = 25.0f;      // カプセル判定半径
+    constexpr float HP_BAR_SCALE = 0.5f;         // HPバー描画倍率
+    constexpr float OVER_COL_RADIUS = 35.0f;     // ゲームオーバー判定用コリジョン半径
+}
+
 GameScene::GameScene(void):resMng_(ResourceManager::GetInstance())
 {
 }
@@ -56,13 +76,13 @@ void GameScene::Init(void)
 	imgP1Win_ = resMng_.Load(ResourceManager::SRC::IMG_1P_WIN).handleId_;
 	imgP2Win_ = resMng_.Load(ResourceManager::SRC::IMG_2P_WIN).handleId_;
 
-	shadowH = MakeShadowMap(2048, 2048);
+	shadowH = MakeShadowMap(SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
 	SetShadowMapLightDirection(shadowH, VGet(0.0f, -1.0f, 0.0f));
-	SetShadowMapDrawArea(shadowH, VGet(-1000.0f, -1.0f, -1000.0f), VGet(1000.0f, 1000.0f, 1000.0f));
+	SetShadowMapDrawArea(shadowH, VGet(SHADOW_AREA_MIN, -1.0f, SHADOW_AREA_MIN), VGet(SHADOW_AREA_MAX, SHADOW_AREA_MAX, SHADOW_AREA_MAX));
 
-	for (int plNum = 0; plNum < 2; plNum++)
+	for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 	{
-		HpWindowH_[plNum] = MakeScreen(500, 163, true);
+		HpWindowH_[plNum] = MakeScreen(HP_WINDOW_W, HP_WINDOW_H, true);
 
 
 		int hp = players_[plNum]->GetHp();
@@ -145,7 +165,7 @@ void GameScene::Update(void)
 
 	stage_->Update();
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < PLAYER_NUM; i++)
 	{
 		//  i番目のプレイヤーが生きていたら
 		if (players_[i]->IsAlive() == true)
@@ -172,7 +192,7 @@ void GameScene::Update(void)
 	//  ステージモデルID
 	int modelStageId = stage_->GetModelId();
 
-	for (int p = 0; p < 2; p++)	//  p = プレイヤー番号
+	for (int p = 0; p < PLAYER_NUM; p++)	//  p = プレイヤー番号
 	{
 		switch (p)
 		{
@@ -188,7 +208,7 @@ void GameScene::Update(void)
 				VECTOR ePosUp = VAdd(ePos, { 0.0f,70.0f,0.0f });
 				VECTOR ePosDown = VAdd(ePos, { 0.0f,25.0f,0.0f });
 
-				float COLRADIUS = 25.0f;
+				float COLRADIUS = CAPSULE_RADIUS;
 				if (HitCheck_Capsule_Capsule(pPosUp, pPosDown, COLRADIUS, ePosUp, ePosDown, COLRADIUS))
 				{
 					players_[p + 1]->Damage(players_[p]->GetAttackDamage(), players_[p]->GetAttackDamage(), {1.0f,1.0f,1.0f}, PlayerBase::ATTACK_TYPE::BOMB);
@@ -206,9 +226,9 @@ void GameScene::Update(void)
 
 				VECTOR ePos = players_[p - 1]->GetPos();
 				VECTOR ePosUp = VAdd(ePos, { 0.0f,70.0f,0.0f });
-				VECTOR ePosDown = VAdd(ePos, { 0.0f,25.0f,0.0f });
+				VECTOR ePosDown = VAdd(ePos, { 0.0f,25.0f });
 
-				float COLRADIUS = 25.0f;
+				float COLRADIUS = CAPSULE_RADIUS;
 				if (HitCheck_Capsule_Capsule(pPosUp, pPosDown, COLRADIUS, ePosUp, ePosDown, COLRADIUS))
 				{
 					players_[p - 1]->Damage(players_[p]->GetAttackDamage(), players_[p]->GetAttackDamage(), { 1.0f,1.0f,1.0f }, PlayerBase::ATTACK_TYPE::BOMB);
@@ -221,7 +241,7 @@ void GameScene::Update(void)
 		}
 	}
 
-	for (int p = 0; p < 2; p++)	//  p = プレイヤー番号
+	for (int p = 0; p < PLAYER_NUM; p++)	//  p = プレイヤー番号
 	{
 
 		auto shots = players_[p]->GetShots();
@@ -458,7 +478,7 @@ void GameScene::Update(void)
 
 	}
 
-	for (int plNum = 0; plNum < 2; plNum++)
+	for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 	{
 		if (players_[plNum]->GetHp() <= 0)
 		{
@@ -483,7 +503,7 @@ void GameScene::Update(void)
 		}
 	}
 
-	for (int plNum = 0; plNum < 2; plNum++)
+	for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 	{
 		int hp = players_[plNum]->GetHp();
 		hpHundred_[plNum] = hp / 100;
@@ -534,29 +554,29 @@ void GameScene::Draw(void)
 		}
 	}
 
-	for (int plNum = 0; plNum < 2; plNum++)
+	for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 	{
 		VECTOR pos = players_[plNum]->GetPos();
 		pos.y += 283 * players_[plNum]->GetScl().y;
 		SetDrawScreen(HpWindowH_[plNum]);
 		ClsDrawScreen();
 
-		DrawGraph(0, 0, HpBarImageH_[plNum], true);
-		DrawGraph(0, 67, HpBarBlackImageH_, true);
+		DrawGraph(HP_BAR_X, HP_BAR_Y, HpBarImageH_[plNum], true);
+		DrawGraph(HP_BAR_X, HP_BAR_Y + 25, HpBarBlackImageH_, true);
 		int hp = players_[plNum]->GetHp();
 		for(int i =0; i < players_[plNum]->GetHp()/2;i++)
 		{
-			DrawGraph(i, 67, HpScaleImageH_, true);
+			DrawGraph(i, HP_BAR_Y + 25, HpScaleImageH_, true);
 		}
-		DrawGraph(336, 92, NumImageH_[plNum][hpHundred_[plNum]], true);
-		DrawGraph(336 + 51, 92, NumImageH_[plNum][hpTens_[plNum]], true);
-		DrawGraph(336 + 100, 92, NumImageH_[plNum][hpOnes_[plNum]], true);
+		DrawGraph(HP_NUM_X, HP_NUM_Y, NumImageH_[plNum][hpHundred_[plNum]], true);
+		DrawGraph(HP_NUM_X + HP_NUM_TENS_OFFSET, HP_NUM_Y, NumImageH_[plNum][hpTens_[plNum]], true);
+		DrawGraph(HP_NUM_X + HP_NUM_ONES_OFFSET, HP_NUM_Y, NumImageH_[plNum][hpOnes_[plNum]], true);
 
 		SetDrawScreen(DX_SCREEN_BACK);
 
 			SceneManager::GetInstance().GetCamera().lock()->SetBeforeDraw();
 
-		DrawBillboard3D(pos, 0.5f, 0.0f, 200, 0.0f, HpWindowH_[plNum], true);
+		DrawBillboard3D(pos, HP_BAR_SCALE, 0.0f, 200, 0.0f, HpWindowH_[plNum], true);
 	}
 
 	if (p1win_ == true)
@@ -574,7 +594,7 @@ void GameScene::Draw(void)
 void GameScene::Release(void)
 {
 	stage_->Release();
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < PLAYER_NUM; i++)
 	{
 
 		players_[i]->Release();
@@ -586,7 +606,7 @@ void GameScene::Release(void)
 	DeleteGraph(imgP2Win_);
 	DeleteGraph(HpBarBlackImageH_);
 	DeleteGraph(HpScaleImageH_);
-	for (int plNum = 0; plNum < 2; plNum++)
+	for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 	{
 		DeleteGraph(HpBarImageH_[plNum]);
 		DeleteGraph(HpWindowH_[plNum]);

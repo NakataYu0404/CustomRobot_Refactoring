@@ -5,38 +5,35 @@ class ResourceManager;
 class Stage
 {
 public:
+    // コンストラクタ
+    Stage();
+    // デストラクタ
+    ~Stage();
 
-	//  コンストラクタ
-	Stage(void);
-	//  デストラクタ
-	~Stage(void);
+    void Init();
+    void Update();
+    void Draw();
+    void Release();
 
-	void Init(void);
-	void Update(void);
-	void Draw(void);
-	void Release(void);
+    int GetModelId();
+    int GetCoverModelId();
 
-	int GetModelId(void);
-	int GetCoverModelId(void);
-
-	void SetShadowH(int Hand);
+    void SetShadowH(int handle);
 
 private:
+    // 3DモデルのハンドルID
+    int modelId_;
+    int coverModelId_;
 
-	//  3DモデルのハンドルID
-	int modelId_;
-	int coverModelId_;
+    int modelSkyId_;
 
-	int modelSkyId_;
+    // ステージ上に配置する飾り文字のID（当たり判定不要）
+    int charId_;
 
-	//  ステージ上に配置する飾り文字のID、当たり判定いらない
-	int charId_;
+    // 背景画像のハンドルID
+    int imgBack_;
 
-	//  背景画像のハンドルID
-	int imgBack_;
+    int shadowH;
 
-	int shadowH;
-
-	ResourceManager& resMng_;
+    ResourceManager& resMng_;
 };
-

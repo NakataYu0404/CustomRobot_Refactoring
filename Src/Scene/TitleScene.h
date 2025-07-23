@@ -7,23 +7,28 @@ class TitleScene : public SceneBase
 
 public:
 
-	//  コンストラクタ
+	// コンストラクタ
 	TitleScene(void);
 
-	//  デストラクタ
+	// デストラクタ
 	~TitleScene(void);
 
+
+	//
 	void Init(void) override;
+	//
 	void Update(void) override;
+	//
 	void Draw(void) override;
+	//
 	void Release(void) override;
+
 
 private:
 
-	//  画像
-	int imgTitle_;
-	int modelSkyId_;
-	float rotY_;
+	int imgTitle_;        // タイトル画像ハンドル
+	int modelSkyId_;      // 空背景モデルID
+	float rotY_;          // 背景回転値
 
 	ResourceManager& resMng_;
 };

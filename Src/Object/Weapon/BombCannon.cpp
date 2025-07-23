@@ -8,34 +8,32 @@
 
 void BombCannon::SetParam(void)
 {
-	//  使用メモリ容量と読み込み時間削減のため
-	//  モデルデータをいくつもメモリ上に存在させない
+	// モデル複製
 	modelId_ = MV1DuplicateModel(baseModelId_);
 
-	//  弾の大きさを設定
-	scl_ = { 0.8f,0.8f,0.8f };
+	// モデルスケール設定
+	scl_ = { SCALE, SCALE, SCALE };
 
-	//  弾の角度を設定
+	// 回転初期化
 	rot_ = { 0.0f,0.0f,0.0f };
 
-	//  弾の速度
-	speed_ = 8.0f;
+	// 移動速度設定
+	speed_ = SPEED;
 
-	hpDamage_ = 30;
+	// ダメージ設定
+	hpDamage_ = HP_DAMAGE;
 	stunDamage_ = hpDamage_;
 
 	ShotBlastCnt_ = 0;
-
 	moveDistance = 0.0f;
-
 	dirFlag = false;
-
-	ShotBlastMax_ = 600;
+	ShotBlastMax_ = SHOT_BLAST_MAX;
 	blastCnt_ = 0;
 
+	// クロスヘア初期化
 	crossHairId_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_CROSSHAIR);
 	crosshairPos_ = enemyPos_;
-	crosshairScl_ = { 0.8f,0.8f,0.8f };
+	crosshairScl_ = { CROSSHAIR_SCALE, CROSSHAIR_SCALE, CROSSHAIR_SCALE };
 	crosshairRot_ = { 0.0f,0.0f,0.0f };
 	
 	crosshairFlag_ = false;
@@ -43,44 +41,32 @@ void BombCannon::SetParam(void)
 
 void BombCannon::UpdateWeapon(void)
 {
-	//  ↓弾を移動させる
-	//  移動量の計算(方向*スピード)
+	// 移動量計算
 	VECTOR movePow = VScale(dir_, speed_);
-	//  撃った時にジャンプしていたかどうかで処理を分ける
-	if (!isJump_ && posFire_.y <= enemyPos_.y+0.5f)
+	// ジャンプしていないかつ発射位置Yが敵Y+0.5以下なら反転判定
+	if (!isJump_ && posFire_.y <= enemyPos_.y + 0.5f)
 	{
-		//  移動距離を測る
 		moveDistance += sqrt((movePow.x * movePow.x) + (movePow.z * movePow.z));
 		if ((moveDistance >= (plEnDistance_ / 2.0f) + (fmodf(plEnDistance_, 2.0f))) && dirFlag == false)
 		{
-			//  弾の移動距離が敵と自分距離の半分以上になったら処理
 			moveDistance = 0.0f;
 			dir_.y *= -1.0f;
 			dirFlag = true;
 		}
 	}
-	//  移動処理(座標+移動量) 落下を考えていない
+	// 位置更新
 	pos_ = VAdd(pos_, movePow);
 	if (crosshairFlag_ == false)
 	{
 		crosshairFlag_ = true;
-		crosshairPos_.x += movePow.x*12.0f;
+		crosshairPos_.x += movePow.x * CROSSHAIR_MOVE_SCALE;
 		crosshairPos_.y = 0.0f;
-		crosshairPos_.z += movePow.z*12.0f;
+		crosshairPos_.z += movePow.z * CROSSHAIR_MOVE_SCALE;
 	}
-	////  加速度的に重力を加える
-	//gravityPow_ += SceneManager::GRAVITY / SceneManager::DEFAULT_FPS;
-	//pos_ = VAdd(pos_, VScale({ 0.0f,-1.0f,0.0f }, gravityPow_));
-
-	//  大きさの設定
+	// モデルスケール・回転・位置設定
 	MV1SetScale(modelId_, scl_);
-
-	//  角度の設定
 	MV1SetRotationXYZ(modelId_, rot_);
-
-	//  位置の設定
 	MV1SetPosition(modelId_, pos_);
-
 	MV1SetScale(crossHairId_, scl_);
 	MV1SetRotationXYZ(crossHairId_, rot_);
 	MV1SetPosition(crossHairId_, crosshairPos_);
@@ -88,34 +74,24 @@ void BombCannon::UpdateWeapon(void)
 
 void BombCannon::UpdateBlast(void)
 {
-	float sclUp = 0.1f;
+	// 爆発時スケール増加
 	if (blastCnt_ == 0)
 	{
-		//  特定の大きさ(10)まで段々でかくする
-		scl_.x += sclUp;
-		scl_.y += sclUp;
-		scl_.z += sclUp;
+		scl_.x += BLAST_SCL_UP;
+		scl_.y += BLAST_SCL_UP;
+		scl_.z += BLAST_SCL_UP;
 	}
-	//  演出の為に回転させる
-	rot_.y+=0.05f;
-
-	//  大きさの設定
+	// 爆発時Y軸回転
+	rot_.y += BLAST_ROT_Y;
 	MV1SetScale(modelId_, scl_);
-
-	//  角度の設定
 	MV1SetRotationXYZ(modelId_, rot_);
-
-	//  位置の設定
 	MV1SetPosition(modelId_, pos_);
-
-	if (scl_.x > 10.0)
+	if (scl_.x > BLAST_MAX_SCL)
 	{
-		//  特定の大きさより大きくなったら、持続カウンタを回す
 		blastCnt_++;
 	}
-	if (blastCnt_ >= 60)
+	if (blastCnt_ >= BLAST_MAX_CNT)
 	{
-		//  持続カウンタがいっぱいになったら消す
 		ChangeState(STATE::END);
 	}
 }
@@ -127,7 +103,6 @@ void BombCannon::DrawShot(void)
 
 	MV1DrawModel(crossHairId_);
 	MV1DrawModel(modelId_);
-
 }
 
 void BombCannon::DrawBlast(void)

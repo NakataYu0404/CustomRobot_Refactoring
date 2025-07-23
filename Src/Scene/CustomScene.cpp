@@ -9,6 +9,40 @@
 #include "GameScene.h"
 #include "CustomScene.h"
 
+// 定数（マジックナンバー）
+namespace {
+    static constexpr int PLAYER_NUM = 2;                // プレイヤー数
+    static constexpr int ARROW_IMAGE_NUM = 59;          // 矢印画像数
+    static constexpr int ARROW_ANIM_MAX = 58;           // 矢印アニメ最大
+    static constexpr int BODY_TYPE_NUM = 5;             // ボディタイプ数
+    static constexpr int GUN_TYPE_NUM = 3;              // ガンタイプ数
+    static constexpr int BOMB_TYPE_NUM = 2;             // ボムタイプ数
+    static constexpr int POD_TYPE_NUM = 3;              // ポッドタイプ数
+    static constexpr int REG_TYPE_NUM = 2;              // レグタイプ数
+    static constexpr int SELECT_IMAGE_PATTERN_NUM = 4;  // セレクト画像パターン数
+    static constexpr int SCREEN_DIV = 128;              // 画面分割定数
+    static constexpr int FONT_SIZE = 32;                // フォントサイズ
+    static constexpr int EXPO_SCREEN_W = 600;           // Expo画面幅
+    static constexpr int EXPO_SCREEN_H = 428;           // Expo画面高さ
+    static constexpr int PREVIEW_SCREEN_W = 428;        // プレビュー画面幅
+    static constexpr int PREVIEW_SCREEN_H = 428;        // プレビュー画面高さ
+    static constexpr int UI_BOX_X = 8;                  // UIボックスX座標
+    static constexpr int UI_BOX_Y = 2;                  // UIボックスY座標
+    static constexpr float ARROW_POS_X_NORMAL = 430.0f; // 矢印X座標（通常）
+    static constexpr float ARROW_POS_X_SELECT = 410.0f; // 矢印X座標（選択時）
+    static constexpr float ARROW_POS_Y_INIT = 62.0f;    // 矢印Y初期座標
+    static constexpr float WINDOW_MAX_SIZE_X = 480.0f;  // ウィンドウ最大サイズX
+    static constexpr float WINDOW_MAX_SIZE_Y = 0.0f;    // ウィンドウ最大サイズY
+    static constexpr float PREVIEW_GRAPH_X = 412.0f;    // プレビューグラフX座標
+    static constexpr float PREVIEW_GRAPH_Y = 26.0f;     // プレビューグラフY座標
+    static constexpr float WINDOW_DIV = 15.0f;          // ウィンドウ拡大分割数
+    static constexpr float ARROW_SCALE = 0.13f;         // 矢印描画スケール
+    static constexpr float ARROW_ROT_DEG = 90.0f;       // 矢印描画回転（度）
+    static constexpr int LINE_COLOR = 0xff8844;         // ライン色
+    static constexpr int SELECT_COLOR_1P = 0xff8844;    // 1P選択色
+    static constexpr int SELECT_COLOR_2P = 0xffffff;    // 2P選択色
+}
+
 CustomScene::CustomScene(void):resMng_(ResourceManager::GetInstance())
 {
 }
@@ -22,7 +56,7 @@ void CustomScene::Init(void)
 	blank = 40;
 
 	//  あとから出てくるタイプのウィンドウのマックスサイズ
-	windowMaxSizeSelect = { 480.0f,0.0f,0.0f };
+	windowMaxSizeSelect = { WINDOW_MAX_SIZE_X,0.0f,0.0f };
 
 	modelBirbH_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_BIRB);
 	modelYetiH_ = resMng_.LoadModelDuplicate(ResourceManager::SRC::MDL_YETI);
@@ -89,7 +123,7 @@ void CustomScene::Init(void)
 
 	selectImgCnt_ = 0;
 
-	for (int plNum = 0; plNum < 2; plNum++)
+	for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 	{
 		modelPlayerId_[plNum] = modelBirbH_;
 
@@ -143,7 +177,7 @@ void CustomScene::Init(void)
 
 	UIBoxH = resMng_.Load(ResourceManager::SRC::IMG_UIBOX).handleId_;
 	
-	for (int i = 0; i < 59; i++)
+	for (int i = 0; i < ARROW_IMAGE_NUM; i++)
 	{
 		arrowH[i] = LoadGraph((Application::PATH_IMAGE + "Yarrow/" + "File" + std::to_string(i+1) + ".png").c_str());
 	}
@@ -157,7 +191,7 @@ void CustomScene::Init(void)
 	arrowAnimCnt_ = 0;
 
 	//  16で普通のフォントサイズ
-	fontH = CreateFontToHandle(NULL, 32, -1, -1);
+	fontH = CreateFontToHandle(NULL, FONT_SIZE, -1, -1);
 
 	soundBgmH_ = LoadSoundMem((Application::PATH_BGM + "Custom.mp3").c_str());
 }
@@ -171,7 +205,7 @@ void CustomScene::Update(void)
 
 	//  Cursor_ステートをいまカーソルがある位置のステートに変える処理を作りたい
 	Cursor();
-	for (int plNum = 0; plNum < 2; plNum++)
+	for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 	{
 		if (finishFlag_[plNum] == true)
 		{
@@ -182,7 +216,7 @@ void CustomScene::Update(void)
 	}
 	if (finishFlag_[0] == true || finishFlag_[1] == true)
 	{
-		for (int plNum = 0; plNum < 2; plNum++)
+		for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 		{
 			if (finishFlag_[plNum] == true && finishChangeFlag_[plNum] == false)
 			{
@@ -226,13 +260,13 @@ void CustomScene::Update(void)
 
 void CustomScene::Draw(void)
 {
-	if (arrowAnimCnt_ > 58)
+	if (arrowAnimCnt_ > ARROW_ANIM_MAX)
 	{
 		arrowAnimCnt_ = 0;
 	}
 
 	VECTOR SCREENSIZE = { Application::GetInstance().SCREEN_SIZE_X,Application::GetInstance().SCREEN_SIZE_Y,0 };
-	for (int plNum = 0; plNum < 2; plNum++)
+	for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 	{
 		int i = 0;
 
@@ -240,38 +274,38 @@ void CustomScene::Draw(void)
 		ClsDrawScreen();
 		DrawExtendGraph(0,0, Application::GetInstance().SCREEN_SIZE_X, Application::GetInstance().SCREEN_SIZE_Y / 2,UIBoxH, true);
 
-		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, blank * i + 5, color_[plNum], fontH, ("P""%d"),plNum+1);
+		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, blank * i + 5, color_[plNum], fontH, ("P""%d"),plNum+1);
 		i++;
 
-		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, 0xff8844);
-		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, blank * i + 5, 0xffffff, fontH, "ボディ：%s", body[static_cast<int>(bodyType_[plNum])].c_str());
+		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, LINE_COLOR);
+		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, blank * i + 5, 0xffffff, fontH, "ボディ：%s", body[static_cast<int>(bodyType_[plNum])].c_str());
 		i++;
 
-		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, 0xff8844);
-		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, blank * i + 5, 0xffffff, fontH, " ガン ：%s", gun[static_cast<int>(shotType_[plNum])].c_str());
+		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, LINE_COLOR);
+		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, blank * i + 5, 0xffffff, fontH, " ガン ：%s", gun[static_cast<int>(shotType_[plNum])].c_str());
 		i++;
 
-		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, 0xff8844);
-		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, blank * i + 5,  0xffffff, fontH," ボム ：%s",bomb[static_cast<int>(bombType_[plNum])].c_str());
+		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, LINE_COLOR);
+		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, blank * i + 5,  0xffffff, fontH," ボム ：%s",bomb[static_cast<int>(bombType_[plNum])].c_str());
 		i++;
 
-		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, 0xff8844);
-		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, blank * i + 5, 0xffffff, fontH, "ポッド：%s", pod[static_cast<int>(podType_[plNum])].c_str());
+		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, LINE_COLOR);
+		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, blank * i + 5, 0xffffff, fontH, "ポッド：%s", pod[static_cast<int>(podType_[plNum])].c_str());
 		i++;
 
-		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, 0xff8844);
-		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, blank * i + 5, 0xffffff, fontH, "レッグ：%s", reg[static_cast<int>(regType_[plNum])].c_str());
+		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, LINE_COLOR);
+		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, blank * i + 5, 0xffffff, fontH, "レッグ：%s", reg[static_cast<int>(regType_[plNum])].c_str());
 		i++;
 
-		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, 0xff8844);
-		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, blank * i + 5, 0xffffff, fontH, "準備完了！");
+		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, LINE_COLOR);
+		DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, blank * i + 5, 0xffffff, fontH, "準備完了！");
 		i++;
 
-		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, 0xff8844);
+		DrawLine(0, blank * i + 2, Application::SCREEN_SIZE_X, blank * i + 2, LINE_COLOR);
 
 		if (cursor_[plNum] != SelectState::NORMAL)
 		{
-			DrawRotaGraph(arrowPos_[plNum].x, arrowPos_[plNum].y,0.13,AsoUtility::Deg2RadD(90.0), arrowH[arrowAnimCnt_], true);
+			DrawRotaGraph(arrowPos_[plNum].x, arrowPos_[plNum].y,ARROW_SCALE,AsoUtility::Deg2RadD(ARROW_ROT_DEG), arrowH[arrowAnimCnt_], true);
 		}
 
 		switch (select_[plNum])
@@ -303,7 +337,7 @@ void CustomScene::Draw(void)
 		int pattern[4] = { 0, 1, 0, 2 };
 
 
-		DrawGraph(0, 432 - 33, imageSelectH_[pattern[selectImgCnt_/30%4]], true);
+		DrawGraph(0, 432 - 33, imageSelectH_[pattern[selectImgCnt_/30%SELECT_IMAGE_PATTERN_NUM]], true);
 
 		selectImgCnt_++;
 
@@ -331,7 +365,7 @@ void CustomScene::Draw(void)
 
 void CustomScene::Release(void)
 {
-	for (int plNum = 0; plNum < 2; plNum++)
+	for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 	{
 		DeleteGraph(bodyScreenH[plNum]);
 		DeleteGraph(gunScreenH[plNum]);
@@ -344,7 +378,7 @@ void CustomScene::Release(void)
 
 	}
 	DeleteGraph(UIBoxH);
-	for (int i = 0; i < 59; i++)
+	for (int i = 0; i < ARROW_IMAGE_NUM; i++)
 	{
 		DeleteGraph(arrowH[i]);
 	}
@@ -440,7 +474,7 @@ void CustomScene::Cursor(void)
 	InputManager& ins = InputManager::GetInstance();
 
 
-	for (int plNum = 0; plNum < 2; plNum++)
+	for (int plNum = 0; plNum < PLAYER_NUM; plNum++)
 	{
 		auto playerCtl = ins.GetJPadInputState(static_cast<InputManager::JOYPAD_NO>(plNum+1));
 		ControllerTilt_[plNum] = playerCtl.AKeyLY;
@@ -502,7 +536,7 @@ void CustomScene::Cursor(void)
 			switch (cursor_[plNum])
 			{
 			case CustomScene::SelectState::BODY:
-				arrowPos_[plNum].y = 62.0f;
+				arrowPos_[plNum].y = ARROW_POS_Y_INIT;
 				break;
 			case CustomScene::SelectState::GUN:
 				arrowPos_[plNum].y = 102.0f;
@@ -738,11 +772,11 @@ void CustomScene::Cursor(void)
 		//  カーソルのX位置決め
 		if (select_[plNum] == SelectState::NORMAL || select_[plNum] == SelectState::FINISH)
 		{
-			arrowPos_[plNum].x = 430.0f;
+			arrowPos_[plNum].x = ARROW_POS_X_NORMAL;
 		}
 		else
 		{
-			arrowPos_[plNum].x = 410.0f;
+			arrowPos_[plNum].x = ARROW_POS_X_SELECT;
 
 		}
 		ControllerTiltOld_[plNum] = ControllerTilt_[plNum];
@@ -761,17 +795,17 @@ void CustomScene::DrawBodyScreen(int player)
 
 	DrawExtendGraph(0, 0, windowMaxSizeSelect.x, (body.size() + 2) * blank, UIBoxH, true);
 
-	DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, 5, 0xffffff,fontH, "ボディ：");
+	DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, 5, 0xffffff,fontH, "ボディ：");
 	for (int i = 0; i < bodysize; i++)
 	{
 		DrawFormatStringToHandle(140+8, blank * (i)+5, 0xffffff,fontH, "%s", body[i].c_str());
 
-		DrawLine(0, blank * (i + 1) + 2, Application::SCREEN_SIZE_X, blank * (i + 1) + 2, 0xff8844);
+		DrawLine(0, blank * (i + 1) + 2, Application::SCREEN_SIZE_X, blank * (i + 1) + 2, LINE_COLOR);
 	}
-	DrawRotaGraph(arrowPos_[player].x, arrowPos_[player].y, 0.13, AsoUtility::Deg2RadD(90.0), arrowH[arrowAnimCnt_], true);
+	DrawRotaGraph(arrowPos_[player].x, arrowPos_[player].y, ARROW_SCALE, AsoUtility::Deg2RadD(ARROW_ROT_DEG), arrowH[arrowAnimCnt_], true);
 	SetDrawScreen(screenH);
 	WindowBeBig(player, (bodysize+2) * (blank));
-	DrawExtendGraph(8, 2, windowSizeSelect[player].x + 8, windowSizeSelect[player].y + 2, bodyScreenH[player], true);
+	DrawExtendGraph(UI_BOX_X, UI_BOX_Y, windowSizeSelect[player].x + UI_BOX_X, windowSizeSelect[player].y + UI_BOX_Y, bodyScreenH[player], true);
 }
 
 void CustomScene::DrawShotScreen(int player)
@@ -785,16 +819,16 @@ void CustomScene::DrawShotScreen(int player)
 
 	DrawExtendGraph(0, 0, windowMaxSizeSelect.x, (gun.size() + 2) * blank, UIBoxH, true);
 
-	DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, 5, 0xffffff, fontH, " ガン ：");
+	DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, 5, 0xffffff, fontH, " ガン ：");
 	for (int i = 0; i < gunsize; i++)
 	{
 		DrawFormatStringToHandle(140 + 8, blank * (i)+5, 0xffffff, fontH, "%s", gun[i].c_str());
-		DrawLine(0, blank * (i + 1) + 2, Application::SCREEN_SIZE_X, blank * (i + 1) + 2, 0xff8844);
+		DrawLine(0, blank * (i + 1) + 2, Application::SCREEN_SIZE_X, blank * (i + 1) + 2, LINE_COLOR);
 	}
-	DrawRotaGraph(arrowPos_[player].x, arrowPos_[player].y, 0.13, AsoUtility::Deg2RadD(90.0), arrowH[arrowAnimCnt_], true);
+	DrawRotaGraph(arrowPos_[player].x, arrowPos_[player].y, ARROW_SCALE, AsoUtility::Deg2RadD(ARROW_ROT_DEG), arrowH[arrowAnimCnt_], true);
 	SetDrawScreen(screenH);
 	WindowBeBig(player, (gunsize + 2) * (blank));
-	DrawExtendGraph(8, 2, windowSizeSelect[player].x + 8, windowSizeSelect[player].y + 2, gunScreenH[player], true);
+	DrawExtendGraph(UI_BOX_X, UI_BOX_Y, windowSizeSelect[player].x + UI_BOX_X, windowSizeSelect[player].y + UI_BOX_Y, gunScreenH[player], true);
 }
 
 void CustomScene::DrawBombScreen(int player)
@@ -808,16 +842,16 @@ void CustomScene::DrawBombScreen(int player)
 
 	DrawExtendGraph(0, 0, windowMaxSizeSelect.x, (bomb.size() + 2) * blank, UIBoxH, true);
 
-	DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, 5, 0xffffff, fontH, " ボム ：");
+	DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, 5, 0xffffff, fontH, " ボム ：");
 	for (int i = 0; i < bombsize; i++)
 	{
 		DrawFormatStringToHandle(140 + 8, blank * (i)+5, 0xffffff, fontH, "%s", bomb[i].c_str());
-		DrawLine(0, blank * (i + 1) + 2, Application::SCREEN_SIZE_X, blank * (i + 1) + 2, 0xff8844);
+		DrawLine(0, blank * (i + 1) + 2, Application::SCREEN_SIZE_X, blank * (i + 1) + 2, LINE_COLOR);
 	}
-	DrawRotaGraph(arrowPos_[player].x, arrowPos_[player].y, 0.13, AsoUtility::Deg2RadD(90.0), arrowH[arrowAnimCnt_], true);
+	DrawRotaGraph(arrowPos_[player].x, arrowPos_[player].y, ARROW_SCALE, AsoUtility::Deg2RadD(ARROW_ROT_DEG), arrowH[arrowAnimCnt_], true);
 	SetDrawScreen(screenH);
 	WindowBeBig(player, (bombsize + 2) * (blank));
-	DrawExtendGraph(8, 2, windowSizeSelect[player].x + 8, windowSizeSelect[player].y + 2, bombScreenH[player], true);
+	DrawExtendGraph(UI_BOX_X, UI_BOX_Y, windowSizeSelect[player].x + UI_BOX_X, windowSizeSelect[player].y + UI_BOX_Y, bombScreenH[player], true);
 }
 
 void CustomScene::DrawPodScreen(int player)
@@ -831,16 +865,16 @@ void CustomScene::DrawPodScreen(int player)
 
 	DrawExtendGraph(0, 0, windowMaxSizeSelect.x, (pod.size() + 2) * blank, UIBoxH, true);
 
-	DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, 5, 0xffffff, fontH, "ポッド：");
+	DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, 5, 0xffffff, fontH, "ポッド：");
 	for (int i = 0; i < podsize; i++)
 	{
 		DrawFormatStringToHandle(140 + 8, blank * (i)+5, 0xffffff, fontH, "%s", pod[i].c_str());
-		DrawLine(0, blank * (i + 1) + 2, Application::SCREEN_SIZE_X, blank * (i + 1) + 2, 0xff8844);
+		DrawLine(0, blank * (i + 1) + 2, Application::SCREEN_SIZE_X, blank * (i + 1) + 2, LINE_COLOR);
 	}
-	DrawRotaGraph(arrowPos_[player].x, arrowPos_[player].y, 0.13, AsoUtility::Deg2RadD(90.0), arrowH[arrowAnimCnt_], true);
+	DrawRotaGraph(arrowPos_[player].x, arrowPos_[player].y, ARROW_SCALE, AsoUtility::Deg2RadD(ARROW_ROT_DEG), arrowH[arrowAnimCnt_], true);
 	SetDrawScreen(screenH);
 	WindowBeBig(player, (podsize + 2) * (blank));
-	DrawExtendGraph(8, 2, windowSizeSelect[player].x + 8, windowSizeSelect[player].y + 2, podScreenH[player], true);
+	DrawExtendGraph(UI_BOX_X, UI_BOX_Y, windowSizeSelect[player].x + UI_BOX_X, windowSizeSelect[player].y + UI_BOX_Y, podScreenH[player], true);
 }
 
 void CustomScene::DrawRegScreen(int player)
@@ -854,16 +888,16 @@ void CustomScene::DrawRegScreen(int player)
 
 	DrawExtendGraph(0, 0, windowMaxSizeSelect.x, (reg.size() + 2) * blank, UIBoxH, true);
 
-	DrawFormatStringToHandle(Application::SCREEN_SIZE_X / 128.0f, 5, 0xffffff, fontH, "レッグ：");
+	DrawFormatStringToHandle(Application::SCREEN_SIZE_X / SCREEN_DIV, 5, 0xffffff, fontH, "レッグ：");
 	for (int i = 0; i < regsize; i++)
 	{
 		DrawFormatStringToHandle(140 + 8, blank * (i)+5, 0xffffff, fontH, "%s", reg[i].c_str());
-		DrawLine(0, blank * (i + 1) + 2, Application::SCREEN_SIZE_X, blank * (i + 1) + 2, 0xff8844);
+		DrawLine(0, blank * (i + 1) + 2, Application::SCREEN_SIZE_X, blank * (i + 1) + 2, LINE_COLOR);
 	}
-	DrawRotaGraph(arrowPos_[player].x, arrowPos_[player].y, 0.13, AsoUtility::Deg2RadD(90.0), arrowH[arrowAnimCnt_], true);
+	DrawRotaGraph(arrowPos_[player].x, arrowPos_[player].y, ARROW_SCALE, AsoUtility::Deg2RadD(ARROW_ROT_DEG), arrowH[arrowAnimCnt_], true);
 	SetDrawScreen(screenH);
 	WindowBeBig(player,(regsize + 2) * (blank));
-	DrawExtendGraph(8, 2, windowSizeSelect[player].x + 8, windowSizeSelect[player].y + 2, regScreenH[player], true);
+	DrawExtendGraph(UI_BOX_X, UI_BOX_Y, windowSizeSelect[player].x + UI_BOX_X, windowSizeSelect[player].y + UI_BOX_Y, regScreenH[player], true);
 }
 
 void CustomScene::DrawExpoScreen(int player)
@@ -872,7 +906,7 @@ void CustomScene::DrawExpoScreen(int player)
 	screenH = plScreenH[player];
 	SetDrawScreen(expoScreenH[player]);
 	ClsDrawScreen();
-	DrawExtendGraph(0, 0, 600, 428, UIBoxH, true);
+	DrawExtendGraph(0, 0, EXPO_SCREEN_W, EXPO_SCREEN_H, UIBoxH, true);
 
 	switch (select_[player])
 	{
@@ -1068,18 +1102,18 @@ void CustomScene::DrawPreviewScreen(int player)
 	SceneManager::GetInstance().GetCamera().lock()->ChangeMode(Camera::MODE::FIXED_POINT);
 
 	ClsDrawScreen();
-	DrawExtendGraph(0, 0, 428, 428, UIBoxH, true);
+	DrawExtendGraph(0, 0, PREVIEW_SCREEN_W, PREVIEW_SCREEN_H, UIBoxH, true);
 	players_[player]->SetPos({ 0.0f,0.0f,0.0f });
 	players_[player]->Animation();
 	players_[player]->Draw();
 	SetDrawScreen(plScreenH[player]);
-	DrawGraph(Application::SCREEN_SIZE_X - 412 - 26, 1, PreviewScreenH[player], true);
+	DrawGraph(Application::SCREEN_SIZE_X - PREVIEW_GRAPH_X - PREVIEW_GRAPH_Y, 1, PreviewScreenH[player], true);
 
 }
 
 void CustomScene::WindowBeBig(int player,int maxSizeY)
 {
-	float div = 15.0f;
+	float div = WINDOW_DIV;
 
 		if (windowSizeSelect[player].x + windowMaxSizeSelect.x / div < windowMaxSizeSelect.x)
 		{
