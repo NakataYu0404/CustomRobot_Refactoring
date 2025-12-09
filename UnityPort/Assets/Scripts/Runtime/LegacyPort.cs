@@ -104,7 +104,7 @@ namespace CustomRobot.UnityPort
             mesh.text = LabelText;
             mesh.fontSize = 48;
             mesh.anchor = TextAnchor.MiddleCenter;
-            mesh.transform.position = Vector3.zero;
+            label.transform.position = Vector3.zero;
 
             audioSource = label.AddComponent<AudioSource>();
             audioSource.clip = catalog.LoadBgm(ResourceCatalog.Id.BgmBattle);
