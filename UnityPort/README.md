@@ -6,7 +6,7 @@ This repository originally targets DxLib. To help move the project into Unity, a
 Quick start
 -----------
 1. Create a new Unity 3D project (2021.3 LTS or later).
-2. Copy the `Data` folder from this repository into your Unity project's `Assets/Resources` directory, preserving the sub‑folders (`Image`, `Model`, `Sound/BGM`, `Sound/SE`, `Effect`). Unity will import the textures, audio clips, and models automatically.
+2. Copy the `Data` folder from this repository into your Unity project's `Assets/Resources` directory, preserving the sub-folders (`Image`, `Model`, `Sound/BGM`, `Sound/SE`, `Effect`). Unity will import the textures, audio clips, and models automatically.
 3. Copy `UnityPort/Assets/Scripts/Runtime/LegacyPort.cs` into your project's `Assets/Scripts/Runtime/` directory.
 4. In your startup scene, add an empty `GameObject` and attach the `LegacyPort` component. Press Play:
    - The Title image (`Image/Title.png`) is shown via `Resources.Load`.

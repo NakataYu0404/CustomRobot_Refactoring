@@ -84,6 +84,8 @@ namespace CustomRobot.UnityPort
 
     internal sealed class GameScene : IScene
     {
+        private const string LabelText = "Game scene stub\nWire controls and characters here.";
+
         private readonly LegacyPort owner;
         private readonly ResourceCatalog catalog;
         private GameObject label;
@@ -99,7 +101,7 @@ namespace CustomRobot.UnityPort
         {
             label = new GameObject("GameSceneLabel");
             var mesh = label.AddComponent<TextMesh>();
-            mesh.text = "Game scene stub\nWire controls and characters here.";
+            mesh.text = LabelText;
             mesh.fontSize = 48;
             mesh.anchor = TextAnchor.MiddleCenter;
             mesh.transform.position = Vector3.zero;
