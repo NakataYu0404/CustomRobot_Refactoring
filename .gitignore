@@ -34,3 +34,13 @@
 *.exe
 *.out
 *.app
+
+# Unity generated
+/Library/
+/Temp/
+/Logs/
+/UserSettings/
+/Build/
+/Builds/
+/MemoryCaptures/
+*.unitypackage
